@@ -1,4 +1,4 @@
-'use client';
+// app/lib/spotify.ts
 
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 

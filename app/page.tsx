@@ -2,12 +2,20 @@
 
 import Image from "next/image";
 import { spotifySDK } from "./lib/spotify";
-import { ChangeEventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import getUserIdFromUrl from "./util/getUserIdFromUrl";
+import { User } from "@spotify/web-api-ts-sdk";
+import { getUser, searchSpotify } from "./actions/spotify";
 
 export default function Home() {
   const [formData, setFormData] = useState({
     user1: '',
     user2: ''
+  });
+
+  const [userIds, setUserIds] = useState({
+    userId1: '',
+    userId2: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,12 +26,23 @@ export default function Home() {
   };
 
   const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
+    // check users exist
+    const userId1 = getUserIdFromUrl(formData['user1']);
+    const userId2 = getUserIdFromUrl(formData['user2']);
+
+    getUser(userId1).then(({ success, data }) => {
+      if (success) {
+        console.log(data?.display_name);
+      }
+    });
   };
 
   useEffect(() => {
-    spotifySDK.search("The Beatles", ["artist"]).then((items) => {
-      console.table(items.artists.items.map((item) => ({
+
+    searchSpotify('The Beatles').then(({ success: boolean, data }) => {
+      console.table(data!.artists.items.map((item) => ({
         name: item.name,
         followers: item.followers.total,
         popularity: item.popularity,
@@ -37,13 +56,13 @@ export default function Home() {
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <div className="bg-[#131313] rounded-lg p-8 w-full max-w-md shadow-2xl">
         <h2 className="text-white text-2xl font-extrabold mb-8 text-center">
-          Spotify Blender
+          spotify blender
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="field1" className="block text-sm font-medium text-[#b3b3b3] mb-2">
-              User #1
+              user #1
             </label>
             <input
               type="text"
@@ -52,14 +71,14 @@ export default function Home() {
               value={formData.user1}
               onChange={handleChange}
               className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3e3e3e] rounded-md text-white placeholder-[#6a6a6a] focus:outline-none focus:ring-2 focus:ring-[#1db954] focus:border-transparent transition-colors"
-              placeholder="Enter artist name"
+              placeholder="enter share link of user #1"
               required
             />
           </div>
 
           <div>
             <label htmlFor="field2" className="block text-sm font-medium text-[#b3b3b3] mb-2">
-              User #2
+              user #2
             </label>
             <input
               type="text"
@@ -68,7 +87,7 @@ export default function Home() {
               value={formData.user2}
               onChange={handleChange}
               className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3e3e3e] rounded-md text-white placeholder-[#6a6a6a] focus:outline-none focus:ring-2 focus:ring-[#1db954] focus:border-transparent transition-colors"
-              placeholder="Enter playlist name"
+              placeholder="enter share link of user #2"
               required
             />
           </div>
@@ -77,7 +96,7 @@ export default function Home() {
             type="submit"
             className="w-full bg-[#1db954] hover:bg-[#1ed760] text-black font-bold py-3 px-4 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1db954] focus:ring-offset-2 focus:ring-offset-[#121212]"
           >
-            Blend!
+            blend!
           </button>
         </form>
       </div>
