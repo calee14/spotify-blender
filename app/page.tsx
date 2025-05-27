@@ -1,7 +1,6 @@
 'use client';
 
 import Image from "next/image";
-import { spotifySDK } from "./lib/spotify";
 import { useEffect, useState } from "react";
 import getUserIdFromUrl from "./util/getUserIdFromUrl";
 import { User } from "@spotify/web-api-ts-sdk";
@@ -12,6 +11,10 @@ export default function Home() {
     user1: '',
     user2: ''
   });
+
+  const [user1InputError, setUser1InputError] = useState('');
+  const [user2InputError, setUser2InputError] = useState('');
+
 
   const [userIds, setUserIds] = useState({
     userId1: '',
@@ -28,27 +31,35 @@ export default function Home() {
   const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // check users exist
+    setUser1InputError('');
+    setUser2InputError('');
+
     const userId1 = getUserIdFromUrl(formData['user1']);
     const userId2 = getUserIdFromUrl(formData['user2']);
 
+    setUserIds({
+      userId1: userId1,
+      userId2: userId2
+    });
+
+    // check users exist
     getUser(userId1).then(({ success, data }) => {
       if (success) {
         console.log(data?.display_name);
+      } else {
+        setUser1InputError('please enter a valid share-profile-link for this user');
       }
     });
-  };
+    getUser(userId2).then(({ success, data }) => {
+      if (success) {
+        console.log(data?.display_name);
+      } else {
+        setUser2InputError('please enter a valid share-profile-link for this user');
+      }
+    });
+  }
 
   useEffect(() => {
-
-    searchSpotify('The Beatles').then(({ success: boolean, data }) => {
-      console.table(data!.artists.items.map((item) => ({
-        name: item.name,
-        followers: item.followers.total,
-        popularity: item.popularity,
-      })));
-
-    });
 
   }, []);
 
@@ -74,6 +85,10 @@ export default function Home() {
               placeholder="enter share link of user #1"
               required
             />
+            {user1InputError &&
+              <p className="w-full text-red-400 text-sm">{user1InputError}</p>
+            }
+
           </div>
 
           <div>
@@ -90,6 +105,9 @@ export default function Home() {
               placeholder="enter share link of user #2"
               required
             />
+            {user2InputError &&
+              <p className="w-full text-red-400 text-sm">{user2InputError}</p>
+            }
           </div>
 
           <button
