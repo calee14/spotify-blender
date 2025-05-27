@@ -6,7 +6,7 @@ import { spotifySDK } from "../lib/spotify";
 export async function getUser(userId: string) {
   try {
     const user = await spotifySDK.users.profile(userId);
-    return { success: true, data: user };
+    return { success: true, user: user };
   } catch (error) {
     console.error('cannot find user with id: ', userId, error);
     return { success: false, error: 'failed to find user' };
