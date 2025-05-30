@@ -19,24 +19,29 @@ export default function Home() {
   }, [users]);
 
   useEffect(() => {
-    switch (appState) {
-      case AppState.FORM:
-        break;
-      case AppState.LOADING:
-        let user = users[0];
-        getUserSongs(user.id).then((tracks) => {
-          for (const track of tracks) {
-            console.log(track.name);
+    const handleAppState = async () => {
+      switch (appState) {
+        case AppState.FORM:
+          break;
+        case AppState.LOADING:
+          try {
+            const trackPromises = users.map(user => getUserSongs(user.id));
+            let tracks = await Promise.all(trackPromises);
+            console.log(tracks);
+            setAppState(AppState.BLENDED);
+          } catch (error) {
+            console.error('error getting user songs');
+            setAppState(AppState.FORM);
           }
-          setAppState(AppState.BLENDED);
-        });
-        break;
-      case AppState.BLENDED:
-        console.log('blended');
-        break;
-      default:
-        break;
+          break;
+        case AppState.BLENDED:
+          console.log('blended');
+          break;
+        default:
+          break;
+      }
     }
+    handleAppState();
   }, [appState]);
 
   return (

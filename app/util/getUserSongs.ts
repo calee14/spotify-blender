@@ -2,10 +2,11 @@
 
 import { Track } from "@spotify/web-api-ts-sdk";
 import { getPlaylistSongs, getUserPlaylist } from "../actions/spotify";
+import { UserTracks } from "../types/global";
 
-export default async function getUserSongs(userId: string) {
+export default async function getUserSongs(userId: string): Promise<UserTracks> {
 
-  return getUserPlaylist(userId, 10).then(({ success, playlists, error }) => {
+  return getUserPlaylist(userId, 2).then(({ success, playlists, error }) => {
     let playlistIds: string[] = [];
     if (success) {
       playlists?.items.map((playlist) => {
@@ -26,6 +27,6 @@ export default async function getUserSongs(userId: string) {
         userTracks = [...userTracks, ...tracks];
       });
     }
-    return userTracks;
+    return { userId: userId, tracks: userTracks };
   });
 }
