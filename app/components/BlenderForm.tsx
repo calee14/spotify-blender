@@ -4,12 +4,14 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import getUserIdFromUrl from "../util/getUserIdFromUrl";
 import { getUser } from "../actions/spotify";
 import { User } from "@spotify/web-api-ts-sdk";
+import { AppState } from "../types/enums";
 
 interface BlenderFormProps {
   setUsers: Dispatch<SetStateAction<User[]>>;
+  setAppState: Dispatch<SetStateAction<AppState>>;
 };
 
-export default function BlenderForm({ setUsers }: BlenderFormProps) {
+export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps) {
   const [formData, setFormData] = useState({
     user1: '',
     user2: ''
@@ -58,6 +60,7 @@ export default function BlenderForm({ setUsers }: BlenderFormProps) {
 
     if (success) {
       setUsers(users);
+      setAppState(AppState.LOADING);
     }
   }
 
