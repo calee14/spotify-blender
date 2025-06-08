@@ -6,6 +6,7 @@ import { AppState } from "./types/enums";
 import { User } from "@spotify/web-api-ts-sdk";
 import getUserSongs from "./util/getUserSongs";
 import { getArtistsFromSongs } from "./actions/spotify";
+import getUserArtists from "./util/getUserArtists";
 
 export default function Home() {
 
@@ -27,10 +28,10 @@ export default function Home() {
         case AppState.LOADING:
           try {
             const trackPromises = users.map(user => getUserSongs(user.id, 1));
-            let tracks = await Promise.all(trackPromises);
-            console.log(tracks);
-            console.log(await getArtistsFromSongs(tracks.flatMap((t) => t.tracks)));
-
+            let userTracks = await Promise.all(trackPromises);
+            console.log(userTracks);
+            //console.log(await getArtistsFromSongs(userTracks.flatMap((t) => t.tracks)));
+            console.log(await getUserArtists(userTracks));
             setAppState(AppState.BLENDED);
           } catch (error) {
             console.error('error getting user songs');
