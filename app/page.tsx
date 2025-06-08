@@ -5,6 +5,7 @@ import BlenderForm from "./components/BlenderForm";
 import { AppState } from "./types/enums";
 import { User } from "@spotify/web-api-ts-sdk";
 import getUserSongs from "./util/getUserSongs";
+import { getArtistsFromSongs } from "./actions/spotify";
 
 export default function Home() {
 
@@ -25,9 +26,11 @@ export default function Home() {
           break;
         case AppState.LOADING:
           try {
-            const trackPromises = users.map(user => getUserSongs(user.id));
+            const trackPromises = users.map(user => getUserSongs(user.id, 1));
             let tracks = await Promise.all(trackPromises);
             console.log(tracks);
+            console.log(await getArtistsFromSongs(tracks.flatMap((t) => t.tracks)));
+
             setAppState(AppState.BLENDED);
           } catch (error) {
             console.error('error getting user songs');

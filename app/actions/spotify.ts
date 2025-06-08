@@ -3,7 +3,7 @@
 
 import { IBM_Plex_Sans_JP } from "next/font/google";
 import { spotifySDK } from "../lib/spotify";
-import { MaxInt } from "@spotify/web-api-ts-sdk";
+import { MaxInt, Track } from "@spotify/web-api-ts-sdk";
 
 export async function getUser(userId: string) {
   try {
@@ -22,6 +22,21 @@ export async function getUserPlaylist(userId: string, limit: MaxInt<50> = 10) {
   } catch (error) {
     console.error('cannot find playlists of user with id: ', userId, error);
     return { success: false, error: 'failed to get playlist' };
+  }
+}
+
+export async function getArtistsFromSongs(songs: Track[]) {
+  try {
+    const uniqueArtistIds = new Set<string>();
+    songs.map((track) => {
+      return track.artists[0].id;
+    }).forEach((id) => uniqueArtistIds.add(id));
+
+    const artists = await spotifySDK.artists.get([...uniqueArtistIds]);
+    return { success: true, artists: artists };
+  } catch (error) {
+    console.error('cannot find artists for given list of songs', error);
+    return { success: false, error: 'failed to get artists' };
   }
 }
 
