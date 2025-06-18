@@ -7,6 +7,7 @@ import { User } from "@spotify/web-api-ts-sdk";
 import getUserSongs from "./util/getUserSongs";
 import getUserArtists from "./util/getUserArtists";
 import BlenderLoadingPage from "./components/BlenderLoadingPage";
+import BlenderSummaryPage from "./components/BlenderSummaryPage";
 
 export default function Home() {
 
@@ -31,7 +32,7 @@ export default function Home() {
             let userTracks = await Promise.all(trackPromises);
             console.log(userTracks);
             console.log(await getUserArtists(userTracks));
-            // setAppState(AppState.BLENDED);
+            setAppState(AppState.SUMMARIZE);
           } catch (error) {
             console.error('error getting user songs');
             setAppState(AppState.FORM);
@@ -56,7 +57,7 @@ export default function Home() {
       case AppState.LOADING:
         return <BlenderLoadingPage userNames={users.map((u) => u.display_name)} />;
       case AppState.SUMMARIZE:
-        return <div className="">Here's a summary</div>;
+        return <BlenderSummaryPage tasteMatch="98%" songTitle="Back to Me" setAppState={setAppState} />;
       case AppState.BLENDED:
         return <div className="success">Data loaded successfully</div>;
       default:

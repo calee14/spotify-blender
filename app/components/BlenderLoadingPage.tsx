@@ -33,6 +33,7 @@ export default function BlenderLoadingPage({ userNames }: BlenderLoadingPageProp
 
   const [loadingTexts, setLoadingTexts] = useState(getLoadingTexts());
 
+  // switch btwn loading texts
   useEffect(() => {
     const interval = setInterval(() => {
       setIsVisible(false);
@@ -50,6 +51,7 @@ export default function BlenderLoadingPage({ userNames }: BlenderLoadingPageProp
     return () => clearInterval(interval);
   }, []);
 
+  // update users in loading texts
   useEffect(() => {
     setLoadingTexts(getLoadingTexts());
   }, [selectedUsers]);
