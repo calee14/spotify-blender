@@ -5,8 +5,8 @@ import BlenderForm from "./components/BlenderForm";
 import { AppState } from "./types/enums";
 import { User } from "@spotify/web-api-ts-sdk";
 import getUserSongs from "./util/getUserSongs";
-import { getArtistsFromSongs } from "./actions/spotify";
 import getUserArtists from "./util/getUserArtists";
+import BlenderLoadingPage from "./components/BlenderLoadingPage";
 
 export default function Home() {
 
@@ -30,13 +30,14 @@ export default function Home() {
             const trackPromises = users.map(user => getUserSongs(user.id, 1));
             let userTracks = await Promise.all(trackPromises);
             console.log(userTracks);
-            //console.log(await getArtistsFromSongs(userTracks.flatMap((t) => t.tracks)));
             console.log(await getUserArtists(userTracks));
-            setAppState(AppState.BLENDED);
+            // setAppState(AppState.BLENDED);
           } catch (error) {
             console.error('error getting user songs');
             setAppState(AppState.FORM);
           }
+          break;
+        case AppState.SUMMARIZE:
           break;
         case AppState.BLENDED:
           console.log('blended');
@@ -48,9 +49,23 @@ export default function Home() {
     handleAppState();
   }, [appState]);
 
+  const renderAppStates = () => {
+    switch (appState) {
+      case AppState.FORM:
+        return <BlenderForm setUsers={setUsers} setAppState={setAppState} />;
+      case AppState.LOADING:
+        return <BlenderLoadingPage userNames={users.map((u) => u.display_name)} />;
+      case AppState.SUMMARIZE:
+        return <div className="">Here's a summary</div>;
+      case AppState.BLENDED:
+        return <div className="success">Data loaded successfully</div>;
+      default:
+        return <div>Default content</div>;
+    }
+  }
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
-      <BlenderForm setUsers={setUsers} setAppState={setAppState} />
+      {renderAppStates()}
     </div>
   );
 }
