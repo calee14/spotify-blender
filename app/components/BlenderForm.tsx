@@ -66,14 +66,15 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
 
   return (
     <div className="bg-[#131313] rounded-lg p-8 w-full max-w-md shadow-2xl">
-      <h2 className="text-white text-2xl font-extrabold mb-8 text-center">
+      <h2 className="text-white text-2xl font-extrabold mb-2 text-center">
         spotify blender
       </h2>
+      <p className="text-center text-sm font-medium">blend with spotify friends anytime, anywhere</p>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
         <div>
           <label htmlFor="field1" className="block text-sm font-medium text-[#b3b3b3] mb-2">
-            user #1
+            share link of user #1
           </label>
           <input
             type="text"
@@ -82,7 +83,7 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
             value={formData.user1}
             onChange={handleChange}
             className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3e3e3e] rounded-md text-white placeholder-[#6a6a6a] focus:outline-none focus:ring-2 focus:ring-[#1db954] focus:border-transparent transition-colors"
-            placeholder="enter share link of user #1"
+            placeholder="https://open.spotify.com/user/31pvare2eapogu5ow2pzndpnbvnu?si=c1cb9aa3cc0945c7"
             required
           />
           {user1InputError &&
@@ -93,7 +94,7 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
 
         <div>
           <label htmlFor="field2" className="block text-sm font-medium text-[#b3b3b3] mb-2">
-            user #2
+            share link of user #2
           </label>
           <input
             type="text"
@@ -102,7 +103,7 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
             value={formData.user2}
             onChange={handleChange}
             className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3e3e3e] rounded-md text-white placeholder-[#6a6a6a] focus:outline-none focus:ring-2 focus:ring-[#1db954] focus:border-transparent transition-colors"
-            placeholder="enter share link of user #2"
+            placeholder="https://open.spotify.com/user/31pvare2eapogu5ow2pzndpnbvnu?si=c1cb9aa3cc0945c7"
             required
           />
           {user2InputError &&

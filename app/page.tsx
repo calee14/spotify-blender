@@ -8,6 +8,7 @@ import getUserSongs from "./util/getUserSongs";
 import getUserArtists from "./util/getUserArtists";
 import BlenderLoadingPage from "./components/BlenderLoadingPage";
 import BlenderSummaryPage from "./components/BlenderSummaryPage";
+import BlenderResultsPage from "./components/BlenderResultsPage";
 
 export default function Home() {
 
@@ -59,7 +60,7 @@ export default function Home() {
       case AppState.SUMMARIZE:
         return <BlenderSummaryPage tasteMatch="98%" songTitle="Back to Me" setAppState={setAppState} />;
       case AppState.BLENDED:
-        return <div className="success">Data loaded successfully</div>;
+        return <BlenderResultsPage />;
       default:
         return <div>Default content</div>;
     }
