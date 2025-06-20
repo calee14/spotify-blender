@@ -1,6 +1,6 @@
 // app/util/getUserArtists.ts
 
-import { getArtistsFromSongs } from "../actions/spotify";
+import { getArtistsFromSongs } from "../app/actions/spotify";
 import { ArtistData, UserArtists, UserTracks } from "../types/global";
 
 export default async function getUserArtists(users: UserTracks[]): Promise<UserArtists[]> {

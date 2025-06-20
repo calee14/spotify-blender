@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import BlenderForm from "./components/BlenderForm";
-import { AppState } from "./types/enums";
+import BlenderForm from "../components/BlenderForm";
+import { AppState } from "../types/enums";
 import { User } from "@spotify/web-api-ts-sdk";
-import getUserSongs from "./util/getUserSongs";
-import getUserArtists from "./util/getUserArtists";
-import BlenderLoadingPage from "./components/BlenderLoadingPage";
-import BlenderSummaryPage from "./components/BlenderSummaryPage";
-import BlenderResultsPage from "./components/BlenderResultsPage";
+import getUserSongs from "../util/getUserSongs";
+import getUserArtists from "../util/getUserArtists";
+import BlenderLoadingPage from "../components/BlenderLoadingPage";
+import BlenderSummaryPage from "../components/BlenderSummaryPage";
+import BlenderResultsPage from "../components/BlenderResultsPage";
 
 export default function Home() {
 

@@ -1,7 +1,7 @@
 // app/util/getUserSongs.ts
 
 import { MaxInt, Track } from "@spotify/web-api-ts-sdk";
-import { getPlaylistSongs, getUserPlaylist } from "../actions/spotify";
+import { getPlaylistSongs, getUserPlaylist } from "../app/actions/spotify";
 import { UserTracks } from "../types/global";
 
 // get all songs/tracks from user's top number of playlists (specified by limit)

@@ -2,7 +2,7 @@
 'use server';
 
 import { IBM_Plex_Sans_JP } from "next/font/google";
-import { spotifySDK } from "../lib/spotify";
+import { spotifySDK } from "@/lib/spotify";
 import { MaxInt, Track } from "@spotify/web-api-ts-sdk";
 
 export async function getUser(userId: string) {

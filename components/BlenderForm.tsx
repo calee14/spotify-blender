@@ -2,7 +2,7 @@
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import getUserIdFromUrl from "../util/getUserIdFromUrl";
-import { getUser } from "../actions/spotify";
+import { getUser } from "../app/actions/spotify";
 import { User } from "@spotify/web-api-ts-sdk";
 import { AppState } from "../types/enums";
 
