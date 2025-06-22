@@ -9,6 +9,7 @@ import getUserArtists from "../util/getUserArtists";
 import BlenderLoadingPage from "../components/BlenderLoadingPage";
 import BlenderSummaryPage from "../components/BlenderSummaryPage";
 import BlenderResultsPage from "../components/BlenderResultsPage";
+import getCcassScore from "@/util/getCcassScore";
 
 export default function Home() {
 
@@ -31,8 +32,11 @@ export default function Home() {
           try {
             const trackPromises = users.map(user => getUserSongs(user.id, 1));
             let userTracks = await Promise.all(trackPromises);
+            let userArtists = await getUserArtists(userTracks);
             console.log(userTracks);
-            console.log(await getUserArtists(userTracks));
+            console.log(userArtists);
+            getCcassScore(userTracks, userArtists);
+
             setAppState(AppState.SUMMARIZE);
           } catch (error) {
             console.error('error getting user songs');
