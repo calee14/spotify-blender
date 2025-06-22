@@ -1,5 +1,7 @@
 // app/util/getCcass.ts
 
-export default function getCcass() {
+import { UserArtists, UserTracks } from "@/types/global";
+
+export default function getCcass(userTracks: UserTracks[], userArtists: UserArtists[]) {
 
 };
