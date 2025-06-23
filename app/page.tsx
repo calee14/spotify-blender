@@ -36,12 +36,12 @@ export default function Home() {
             let userArtists = await getUserArtists(userTracks);
             console.log(userTracks);
             console.log(userArtists);
-            getCcassScore(userTracks, userArtists);
+            console.log(getCcassScore(userTracks, userArtists));
             getCcass(userTracks, userArtists);
 
             setAppState(AppState.SUMMARIZE);
           } catch (error) {
-            console.error('error getting user songs');
+            console.error('error getting user songs', error);
             setAppState(AppState.FORM);
           }
           break;
