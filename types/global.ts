@@ -1,4 +1,4 @@
-import { Artist, Track } from "@spotify/web-api-ts-sdk";
+import { Artist, Track, User } from "@spotify/web-api-ts-sdk";
 
 export interface UserTracks {
   userId: string;
@@ -13,4 +13,9 @@ export interface ArtistData {
 export interface UserArtists {
   userId: string;
   artists: ArtistData[];
+}
+
+export interface PlaylistTrack {
+  track: Track;
+  originUser: User[];
 }

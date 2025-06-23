@@ -10,6 +10,7 @@ import BlenderLoadingPage from "../components/BlenderLoadingPage";
 import BlenderSummaryPage from "../components/BlenderSummaryPage";
 import BlenderResultsPage from "../components/BlenderResultsPage";
 import getCcassScore from "@/util/getCcassScore";
+import getCcass from "@/util/getCcass";
 
 export default function Home() {
 
@@ -36,6 +37,7 @@ export default function Home() {
             console.log(userTracks);
             console.log(userArtists);
             getCcassScore(userTracks, userArtists);
+            getCcass(userTracks, userArtists);
 
             setAppState(AppState.SUMMARIZE);
           } catch (error) {
