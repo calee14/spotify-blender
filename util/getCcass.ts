@@ -97,6 +97,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
   let count = 0;
 
   do {
+    if (sharedArtistFreq.length == 0) { break; }
     const i = count % sharedArtistFreq.length;
     const artist = sharedArtistFreq[i].artist;
     const user1Tracks: Track[] = user1ArtistTracks.get(artist.artist.id) || [];
@@ -128,11 +129,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
       group = true;
     }
     count += 1;
-  } while (count < numSharedArtistTracks && playlist.length < PLAYLIST_SIZE);
-
-  playlist.forEach((pt) => {
-    console.log(pt.track.name, pt.originUser);
-  });
+  } while (count < numSharedArtistTracks && playlist.length <= 39);
 
   // fill up the rest of the playlist
   const takenSongs = new Set(playlist.map((pt) => pt.track.id));
@@ -140,12 +137,32 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
   const user2LeftoverTracks = userTracks[1].tracks.filter((track) => !takenSongs.has(track.id));
 
   do {
-
     // skip shared artist has no more tracks
     if (user1LeftoverTracks.length == 0 && user2LeftoverTracks.length == 0) {
       break;
     }
+    if ((group && user1LeftoverTracks.length > 0) || user2LeftoverTracks.length == 0) {
+      const randIndex = Math.floor(Math.random() * user1LeftoverTracks.length);
+      playlist.push({ track: user1LeftoverTracks[randIndex], originUser: [userArtists[0].userId] });
+
+      // del track, avoid dup
+      user1LeftoverTracks.splice(randIndex, 1);
+
+      group = false;
+    } else if ((!group && user2LeftoverTracks.length > 0) || user1LeftoverTracks.length == 0) {
+      const randIndex = Math.floor(Math.random() * user2LeftoverTracks.length);
+      playlist.push({ track: user2LeftoverTracks[randIndex], originUser: [userArtists[1].userId] });
+
+      // del track, avoid dup
+      user2LeftoverTracks.splice(randIndex, 1);
+
+      group = true;
+    }
     count += 1;
   } while (count < numSharedArtistTracks && playlist.length < PLAYLIST_SIZE)
+
+  playlist.forEach((pt) => {
+    console.log(pt.track.name, pt.originUser);
+  });
 
 };

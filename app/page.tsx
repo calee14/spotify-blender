@@ -41,7 +41,7 @@ export default function Home() {
 
             setAppState(AppState.SUMMARIZE);
           } catch (error) {
-            console.error('error getting user songs');
+            console.error('error getting user songs', error);
             setAppState(AppState.FORM);
           }
           break;

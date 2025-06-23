@@ -30,9 +30,10 @@ export async function getArtistsFromSongs(songs: Track[]) {
     let artists: Artist[] = [];
 
     const uniqueArtistIds = new Set<string>();
-    songs.map((track) => {
-      return track.artists[0].id;
-    }).forEach((id) => uniqueArtistIds.add(id));
+
+    songs.filter((track) => track !== null && track !== undefined)
+      .map((track) => track.artists[0].id)
+      .forEach((id) => uniqueArtistIds.add(id));
 
     const tempUniqueArtistIds = Array.from(uniqueArtistIds);
     for (let i = 0; i < tempUniqueArtistIds.length; i += 50) {
