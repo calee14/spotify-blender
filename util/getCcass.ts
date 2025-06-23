@@ -1,14 +1,20 @@
 // app/util/getCcass.ts
 
-import { ArtistData, UserArtists, UserTracks } from "@/types/global";
+import { ArtistData, PlaylistTrack, UserArtists, UserTracks } from "@/types/global";
 import { Track } from "@spotify/web-api-ts-sdk";
 
 interface ArtistFrequency {
   artist: ArtistData;
   freq: number;
 }
+
+const PLAYLIST_SIZE = 52; // divisible by 13
+
 // matching algorithm
 export default function getCcass(userTracks: UserTracks[], userArtists: UserArtists[]) {
+
+  // final playlist
+  let playlist: PlaylistTrack[] = [];
 
   // pair shared tracks
   const user1Tracks = userTracks[0];
@@ -22,6 +28,8 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
       return true;
     }
   });
+
+  playlist.push(...sharedTracks.map((track): PlaylistTrack => ({ track: track, originUser: [userTracks[0].userId, userTracks[1].userId] })));
 
   // find shared artists 
   const user1Artists = userArtists[0];
@@ -81,18 +89,52 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
   console.log(sharedArtistFreq);
 
   // select tracks for shared artists
+  const numSharedArtistTracks = Array.from(user1ArtistTracks.values()).reduce((acc, val) => acc + val.length, 0) +
+    Array.from(user1ArtistTracks.values()).reduce((acc, val) => acc + val.length, 0);
+
   let group = true;
-  for (let i = 0; i < sharedArtistFreq.length; i++) {
+  let count = 0;
+
+  do {
+    const i = count % sharedArtistFreq.length;
     const artist = sharedArtistFreq[i].artist;
     const user1Tracks: Track[] = user1ArtistTracks.get(artist.artist.id) || [];
     const user2Tracks: Track[] = user2ArtistTracks.get(artist.artist.id) || [];
+
+    // skip shared artist has no more tracks
+    if (user1Tracks.length == 0 && user2Tracks.length == 0) {
+      count += 1;
+      continue;
+    }
+
     if ((group && user1Tracks.length > 0) || user2Tracks.length == 0) {
-      console.log(user1Tracks[Math.floor(Math.random() * user1Tracks.length)].name);
+      const randIndex = Math.floor(Math.random() * user1Tracks.length);
+      playlist.push({ track: user1Tracks[randIndex], originUser: [userArtists[0].userId, userArtists[1].userId] });
+
+      // del track, avoid dup
+      user1Tracks.splice(randIndex, 1);
+      user1ArtistTracks.set(artist.artist.id, user1Tracks);
+
       group = false;
     } else if ((!group && user2Tracks.length > 0) || user1Tracks.length == 0) {
-      console.log(user2Tracks[Math.floor(Math.random() * user2Tracks.length)].name);
+      const randIndex = Math.floor(Math.random() * user2Tracks.length);
+      playlist.push({ track: user2Tracks[randIndex], originUser: [userArtists[1].userId, userArtists[0].userId] });
+
+      // del track, avoid dup
+      user2Tracks.splice(randIndex, 1);
+      user2ArtistTracks.set(artist.artist.id, user2Tracks);
+
       group = true;
     }
-  }
+    count += 1;
+  } while (count < numSharedArtistTracks && playlist.length < PLAYLIST_SIZE);
+
+  playlist.forEach((pt) => {
+    console.log(pt.track.name, pt.originUser);
+  });
+
+  do {
+
+  } while (count < numSharedArtistTracks && playlist.length < PLAYLIST_SIZE)
 
 };

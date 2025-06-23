@@ -17,5 +17,5 @@ export interface UserArtists {
 
 export interface PlaylistTrack {
   track: Track;
-  originUser: User[];
+  originUser: string[];
 }
