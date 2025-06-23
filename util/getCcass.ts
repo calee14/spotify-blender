@@ -43,6 +43,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
     return user1ArtistIds.has(artist.artist.id);
   });
 
+  // remove shared tracks to avoid dup
   userTracks.forEach((userTrack) => {
     userTrack.tracks = userTrack.tracks.filter((track) => !uniqueSharedTrackIds.has(track.id));
   });
@@ -133,8 +134,18 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
     console.log(pt.track.name, pt.originUser);
   });
 
+  // fill up the rest of the playlist
+  const takenSongs = new Set(playlist.map((pt) => pt.track.id));
+  const user1LeftoverTracks = userTracks[0].tracks.filter((track) => !takenSongs.has(track.id));
+  const user2LeftoverTracks = userTracks[1].tracks.filter((track) => !takenSongs.has(track.id));
+
   do {
 
+    // skip shared artist has no more tracks
+    if (user1LeftoverTracks.length == 0 && user2LeftoverTracks.length == 0) {
+      break;
+    }
+    count += 1;
   } while (count < numSharedArtistTracks && playlist.length < PLAYLIST_SIZE)
 
 };
