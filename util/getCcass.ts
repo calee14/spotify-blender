@@ -15,6 +15,8 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
 
   // final playlist
   let playlist: PlaylistTrack[] = [];
+  // our song
+  let ourSong: Track | null = null;
 
   // pair shared tracks
   const user1Tracks = userTracks[0];
@@ -80,65 +82,138 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
 
   const sharedArtistFreq: ArtistFrequency[] = sharedArtists.map((artist) => {
     const artistId = artist.artist.id;
+    const freq = (user1ArtistFreq.get(artistId) || 0) + (user2ArtistFreq.get(artistId) || 0);
     return {
-      artist: artist, freq: (user1ArtistFreq.get(artistId) || 0) + (user2ArtistFreq.get(artistId) || 0)
+      artist: artist, freq: freq
     };
   });
 
   sharedArtistFreq.sort((a, b) => b.freq - a.freq);
 
-  console.log(sharedArtistFreq);
+  // helper func  to select and remove a random track
+  function selectAndRemoveTrack(
+    artistId: string,
+    userTracks: Map<string, Track[]>,
+    sharedArtistFreq: ArtistFrequency[],
+    artistIndex: number
+  ): { track: Track; updatedCount: number } | null {
+    const tracks = userTracks.get(artistId) || [];
+    if (tracks.length === 0) return null;
+
+    const randIndex = Math.floor(Math.random() * tracks.length);
+    const selectedTrack = tracks[randIndex];
+
+    // remove track and update maps
+    tracks.splice(randIndex, 1);
+    userTracks.set(artistId, tracks);
+    sharedArtistFreq[artistIndex].freq -= 1;
+
+    return { track: selectedTrack, updatedCount: -1 };
+  }
+
+  // helper func to handle track selection logic
+  function handleTrackSelection(
+    group: boolean,
+    artistIndex: number,
+    artist: any,
+    user1ArtistTracks: Map<string, Track[]>,
+    user2ArtistTracks: Map<string, Track[]>,
+    sharedArtistFreq: ArtistFrequency[],
+    userArtists: any[]
+  ): { selectedTrack: Track; originUser: string[]; newGroup: boolean } | null {
+    const user1Tracks = user1ArtistTracks.get(artist.artist.id) || [];
+    const user2Tracks = user2ArtistTracks.get(artist.artist.id) || [];
+
+    if ((group && user1Tracks.length > 0) || user2Tracks.length == 0) {
+      const result = selectAndRemoveTrack(artist.artist.id, user1ArtistTracks, sharedArtistFreq, artistIndex);
+      if (result) {
+        return {
+          selectedTrack: result.track,
+          originUser: [userArtists[0].userId, userArtists[1].userId],
+          newGroup: false
+        };
+      }
+    } else if ((!group && user2Tracks.length > 0) || user1Tracks.length == 0) {
+      const result = selectAndRemoveTrack(artist.artist.id, user2ArtistTracks, sharedArtistFreq, artistIndex);
+      if (result) {
+        return {
+          selectedTrack: result.track,
+          originUser: [userArtists[1].userId, userArtists[0].userId],
+          newGroup: true
+        };
+      }
+    }
+
+    return null;
+  }
+  // find the next shared artist with tracks
+  const findAvailableArtist = () => {
+    prevI += 1;
+    for (let i = 0; i < sharedArtistFreq.length; i++) {
+      if (sharedArtistFreq[(prevI + i) % sharedArtistFreq.length].freq > 0) {
+        return (prevI + i) % sharedArtistFreq.length;
+      }
+    }
+    return -1;
+  }
 
   // select tracks for shared artists
-  const numSharedArtistTracks = Array.from(user1ArtistTracks.values()).reduce((acc, val) => acc + val.length, 0) +
-    Array.from(user1ArtistTracks.values()).reduce((acc, val) => acc + val.length, 0);
+  let numSharedArtistTracks = Array.from(user1ArtistTracks.values()).reduce((acc, val) => acc + val.length, 0) +
+    Array.from(user2ArtistTracks.values()).reduce((acc, val) => acc + val.length, 0);
 
   let group = true;
-  let count = 0;
+  let prevI = 0;
 
   do {
     if (sharedArtistFreq.length == 0) { break; }
-    const i = count % sharedArtistFreq.length;
+    const i = findAvailableArtist();
+    if (i === -1) { break; }
+    prevI = i;
     const artist = sharedArtistFreq[i].artist;
-    const user1Tracks: Track[] = user1ArtistTracks.get(artist.artist.id) || [];
-    const user2Tracks: Track[] = user2ArtistTracks.get(artist.artist.id) || [];
 
-    // skip shared artist has no more tracks
-    if (user1Tracks.length == 0 && user2Tracks.length == 0) {
-      count += 1;
-      continue;
+    const selection = handleTrackSelection(
+      group, i, artist, user1ArtistTracks, user2ArtistTracks,
+      sharedArtistFreq, userArtists
+    );
+
+    if (selection) {
+      playlist.push({ track: selection.selectedTrack, originUser: selection.originUser });
+      numSharedArtistTracks -= 1;
+      group = selection.newGroup;
     }
+  } while (numSharedArtistTracks > 0 && playlist.length <= 52);
 
-    if ((group && user1Tracks.length > 0) || user2Tracks.length == 0) {
-      const randIndex = Math.floor(Math.random() * user1Tracks.length);
-      playlist.push({ track: user1Tracks[randIndex], originUser: [userArtists[0].userId, userArtists[1].userId] });
+  // if shared tracks still available choose "our song" 
+  if (numSharedArtistTracks > 0 && sharedArtistFreq.length > 0) {
+    const i = findAvailableArtist();
+    if (i !== -1) {
+      prevI = i;
+      const artist = sharedArtistFreq[i].artist;
 
-      // del track, avoid dup
-      user1Tracks.splice(randIndex, 1);
-      user1ArtistTracks.set(artist.artist.id, user1Tracks);
+      const selection = handleTrackSelection(
+        group, i, artist, user1ArtistTracks, user2ArtistTracks,
+        sharedArtistFreq, userArtists
+      );
 
-      group = false;
-    } else if ((!group && user2Tracks.length > 0) || user1Tracks.length == 0) {
-      const randIndex = Math.floor(Math.random() * user2Tracks.length);
-      playlist.push({ track: user2Tracks[randIndex], originUser: [userArtists[1].userId, userArtists[0].userId] });
-
-      // del track, avoid dup
-      user2Tracks.splice(randIndex, 1);
-      user2ArtistTracks.set(artist.artist.id, user2Tracks);
-
-      group = true;
+      if (selection) {
+        ourSong = selection.selectedTrack;
+        numSharedArtistTracks -= 1;
+        group = selection.newGroup;
+      }
     }
-    count += 1;
-  } while (count < numSharedArtistTracks && playlist.length <= 39);
+  }
+
 
   // fill up the rest of the playlist
   const takenSongs = new Set(playlist.map((pt) => pt.track.id));
   const user1LeftoverTracks = userTracks[0].tracks.filter((track) => !takenSongs.has(track.id));
   const user2LeftoverTracks = userTracks[1].tracks.filter((track) => !takenSongs.has(track.id));
+  let numRemainingTracks = Array.from(user1LeftoverTracks.values()).reduce((acc, _) => acc + 1, 0) +
+    Array.from(user2LeftoverTracks.values()).reduce((acc, _) => acc + 1, 0);
 
   do {
-    // skip shared artist has no more tracks
-    if (user1LeftoverTracks.length == 0 && user2LeftoverTracks.length == 0) {
+    // skip, no more tracks
+    if ((user1LeftoverTracks.length == 0 && user2LeftoverTracks.length == 0) || playlist.length >= PLAYLIST_SIZE) {
       break;
     }
     if ((group && user1LeftoverTracks.length > 0) || user2LeftoverTracks.length == 0) {
@@ -158,11 +233,21 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
 
       group = true;
     }
-    count += 1;
-  } while (count < numSharedArtistTracks && playlist.length < PLAYLIST_SIZE)
+    numRemainingTracks -= 1;
+  } while (numRemainingTracks > 0 && playlist.length < PLAYLIST_SIZE)
+
+  // find our song from track list
+  if (!ourSong) {
+    console.log('using the yolo');
+    const userTrackList = userTracks[Math.floor(Math.random() * userTracks.length)].tracks;
+    ourSong = userTrackList[Math.floor(Math.random() * userTrackList.length)];
+  }
 
   playlist.forEach((pt) => {
     console.log(pt.track.name, pt.originUser);
   });
+
+  console.log("our song: ", ourSong?.name);
+
 
 };
