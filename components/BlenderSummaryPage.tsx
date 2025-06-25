@@ -1,7 +1,7 @@
 import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { AppState } from '../types/enums';
 
-interface SpotifyResultPageProps {
+interface BlenderSummaryPageProps {
   tasteMatch: string;
   songTitle: string;
   setAppState: Dispatch<SetStateAction<AppState>>;
@@ -13,7 +13,7 @@ export default function BlenderSummaryPage({
   songTitle,
   setAppState,
   displayDuration = 4000
-}: SpotifyResultPageProps) {
+}: BlenderSummaryPageProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 

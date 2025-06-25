@@ -20,6 +20,7 @@ export default function Home() {
   const [appState, setAppState] = useState<AppState>(AppState.FORM);
 
   const userMap = new Map<string, User>();
+  const [matchScore, setMatchScore] = useState(0);
   const [ourSong, setOurSong] = useState<Track | null>(null);
   const [playlist, setPlaylist] = useState<PlaylistTrack[]>([]);
 
@@ -37,12 +38,14 @@ export default function Home() {
           break;
         case AppState.LOADING:
           try {
-            const trackPromises = users.map(user => getUserSongs(user.id, 4));
+            const trackPromises = users.map(user => getUserSongs(user.id, 13));
             let userTracks = await Promise.all(trackPromises);
             let userArtists = await getUserArtists(userTracks);
             console.log(userTracks);
             console.log(userArtists);
-            getCcassScore(userTracks, userArtists);
+            const matchScore = getCcassScore(userTracks, userArtists);
+            setMatchScore(matchScore);
+            console.log('love score', matchScore);
 
             const { ourSong, playlist } = getCcass(userTracks, userArtists);
             setOurSong(ourSong);
@@ -73,9 +76,9 @@ export default function Home() {
       case AppState.LOADING:
         return <BlenderLoadingPage userNames={users.map((u) => u.display_name)} />;
       case AppState.SUMMARIZE:
-        return <BlenderSummaryPage tasteMatch="98%" songTitle={ourSong?.name || "unavailable"} setAppState={setAppState} />;
+        return <BlenderSummaryPage tasteMatch={`${matchScore}%`} songTitle={ourSong?.name || "unavailable"} setAppState={setAppState} />;
       case AppState.BLENDED:
-        return <BlenderResultsPage />;
+        return <BlenderResultsPage tasteMatch={`${matchScore}%`} ourSong={ourSong!} playlist={playlist} setAppState={setAppState} />;
       default:
         return <div>Default content</div>;
     }
