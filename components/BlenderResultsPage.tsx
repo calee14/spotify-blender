@@ -1,6 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { AppState } from '@/types/enums';
+import { PlaylistTrack } from '@/types/global';
+import { Track } from '@spotify/web-api-ts-sdk';
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
-export default function BlenderResultsPage() {
+interface BlenderResultPageProps {
+  tasteMatch: string;
+  ourSong: Track;
+  playlist: PlaylistTrack[];
+  setAppState: Dispatch<SetStateAction<AppState>>;
+}
+
+export default function BlenderResultsPage({ tasteMatch, ourSong, playlist }: BlenderResultPageProps) {
   const [visibleTexts, setVisibleTexts] = useState(0);
   // TEMP: songs for playlist mix 
   const [blendedSongs, setBlendedSongs] = useState([

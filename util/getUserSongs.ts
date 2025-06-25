@@ -22,7 +22,10 @@ export default async function getUserSongs(userId: string, limit: MaxInt<50> = 1
         let tracks: Track[] = [];
         if (success) {
           songs?.items.map((track) => {
-            tracks.push(track.track);
+            if (track.track !== null && track.track !== undefined) {
+              tracks.push(track.track);
+            }
+
           });
         }
         userTracks = [...userTracks, ...tracks];

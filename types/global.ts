@@ -19,3 +19,8 @@ export interface PlaylistTrack {
   track: Track;
   originUser: string[];
 }
+
+export interface CcassPlaylist {
+  ourSong: Track;
+  playlist: PlaylistTrack[];
+}
