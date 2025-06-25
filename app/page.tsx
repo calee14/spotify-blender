@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import BlenderForm from "../components/BlenderForm";
 import { AppState } from "../types/enums";
-import { User } from "@spotify/web-api-ts-sdk";
+import { Track, User } from "@spotify/web-api-ts-sdk";
 import getUserSongs from "../util/getUserSongs";
 import getUserArtists from "../util/getUserArtists";
 import BlenderLoadingPage from "../components/BlenderLoadingPage";
@@ -11,6 +11,7 @@ import BlenderSummaryPage from "../components/BlenderSummaryPage";
 import BlenderResultsPage from "../components/BlenderResultsPage";
 import getCcassScore from "@/util/getCcassScore";
 import getCcass from "@/util/getCcass";
+import { PlaylistTrack } from "@/types/global";
 
 export default function Home() {
 
@@ -18,10 +19,15 @@ export default function Home() {
 
   const [appState, setAppState] = useState<AppState>(AppState.FORM);
 
+  const userMap = new Map<string, User>();
+  const [ourSong, setOurSong] = useState<Track | null>(null);
+  const [playlist, setPlaylist] = useState<PlaylistTrack[]>([]);
+
   useEffect(() => {
     for (const user of users) {
       console.log(user.display_name);
     }
+    users.forEach((user) => userMap.set(user.id, user));
   }, [users]);
 
   useEffect(() => {
@@ -31,13 +37,16 @@ export default function Home() {
           break;
         case AppState.LOADING:
           try {
-            const trackPromises = users.map(user => getUserSongs(user.id, 1));
+            const trackPromises = users.map(user => getUserSongs(user.id, 4));
             let userTracks = await Promise.all(trackPromises);
             let userArtists = await getUserArtists(userTracks);
             console.log(userTracks);
             console.log(userArtists);
             getCcassScore(userTracks, userArtists);
-            getCcass(userTracks, userArtists);
+
+            const { ourSong, playlist } = getCcass(userTracks, userArtists);
+            setOurSong(ourSong);
+            setPlaylist(playlist);
 
             setAppState(AppState.SUMMARIZE);
           } catch (error) {
@@ -64,7 +73,7 @@ export default function Home() {
       case AppState.LOADING:
         return <BlenderLoadingPage userNames={users.map((u) => u.display_name)} />;
       case AppState.SUMMARIZE:
-        return <BlenderSummaryPage tasteMatch="98%" songTitle="Back to Me" setAppState={setAppState} />;
+        return <BlenderSummaryPage tasteMatch="98%" songTitle={ourSong?.name || "unavailable"} setAppState={setAppState} />;
       case AppState.BLENDED:
         return <BlenderResultsPage />;
       default:

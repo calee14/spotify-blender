@@ -1,6 +1,6 @@
 // app/util/getCcass.ts
 
-import { ArtistData, PlaylistTrack, UserArtists, UserTracks } from "@/types/global";
+import { ArtistData, CcassPlaylist, PlaylistTrack, UserArtists, UserTracks } from "@/types/global";
 import { Track } from "@spotify/web-api-ts-sdk";
 
 interface ArtistFrequency {
@@ -11,7 +11,7 @@ interface ArtistFrequency {
 const PLAYLIST_SIZE = 52; // divisible by 13
 
 // matching algorithm
-export default function getCcass(userTracks: UserTracks[], userArtists: UserArtists[]) {
+export default function getCcass(userTracks: UserTracks[], userArtists: UserArtists[]): CcassPlaylist {
 
   // final playlist
   let playlist: PlaylistTrack[] = [];
@@ -249,5 +249,5 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
 
   console.log("our song: ", ourSong?.name);
 
-
+  return { ourSong: ourSong, playlist: playlist };
 };
