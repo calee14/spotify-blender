@@ -31,7 +31,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
     }
   });
 
-  playlist.push(...sharedTracks.map((track): PlaylistTrack => ({ track: track, originUser: [userTracks[0].userId, userTracks[1].userId] })));
+  playlist.push(...sharedTracks.slice(0, 13).map((track): PlaylistTrack => ({ track: track, originUser: [userTracks[0].userId, userTracks[1].userId] })));
 
   // find shared artists 
   const user1Artists = userArtists[0];

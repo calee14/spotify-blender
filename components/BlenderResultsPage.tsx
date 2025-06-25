@@ -1,16 +1,18 @@
 import { AppState } from '@/types/enums';
 import { PlaylistTrack } from '@/types/global';
-import { Track } from '@spotify/web-api-ts-sdk';
+import { Track, User } from '@spotify/web-api-ts-sdk';
+import Image from 'next/image';
 import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
 interface BlenderResultPageProps {
   tasteMatch: string;
   ourSong: Track;
   playlist: PlaylistTrack[];
+  userMap: Map<string, User>;
   setAppState: Dispatch<SetStateAction<AppState>>;
 }
 
-export default function BlenderResultsPage({ tasteMatch, ourSong, playlist }: BlenderResultPageProps) {
+export default function BlenderResultsPage({ tasteMatch, ourSong, playlist, userMap }: BlenderResultPageProps) {
   const [visibleTexts, setVisibleTexts] = useState(0);
   // TEMP: songs for playlist mix 
   const [blendedSongs, setBlendedSongs] = useState([
@@ -56,7 +58,7 @@ export default function BlenderResultsPage({ tasteMatch, ourSong, playlist }: Bl
   const containers = [
     {
       id: 1,
-      title: "Your Music Match is {}",
+      title: `Your Music Match is ${tasteMatch}`,
       subtitle: "You should be best friends if not already!",
       content: (
         <div></div>
@@ -68,12 +70,20 @@ export default function BlenderResultsPage({ tasteMatch, ourSong, playlist }: Bl
       subtitle: "",
       content: (
         <div className="flex items-center space-x-4">
-          <div className="w-16 h-16 bg-green-500 rounded-lg flex items-center justify-center">
-            <span className="text-black font-bold text-xl">🎵</span>
+          <div className="w-16 h-16 flex items-center justify-center">
+            <Image
+              width={60}
+              height={60}
+              src={ourSong.album.images.at(0)?.url || ""}
+              alt="🌟"
+              className="rounded-md"
+            />
           </div>
           <div>
-            <p className="text-white font-semibold">Blinding Lights - The Weekndlja;lj aklsjflka;jsflkaj lfk;jalkd ;fj fuck weeknd</p>
-          </div>
+            <p className="text-white font-semibold">{ourSong.name}</p>
+            <p className="text-gray-400 text-xs truncate">
+              {ourSong.artists.map((artist) => artist.name).join(',')}
+            </p></div>
         </div>
 
       )
@@ -83,30 +93,46 @@ export default function BlenderResultsPage({ tasteMatch, ourSong, playlist }: Bl
       title: "Your Blended Playlist",
       subtitle: "A perfect mix",
       content: (
-        <div className="space-y-2">
-          {blendedSongs.map((song, index) => (
+        <div className="">
+          {playlist.map((song, index) => (
             <div
-              key={song.id}
+              key={index + 1}
               className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"
             >
               <div className="flex items-center space-x-3 flex-1">
                 <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-md flex items-center justify-center flex-shrink-0">
-                  <span className="text-sm">{song.albumArt}</span>
+                  {/* <span className="text-sm">{song.albumArt}</span> */}
+                  <Image
+                    width={40}
+                    height={40}
+                    src={song.track.album.images.at(0)?.url || ""}
+                    alt="🌟"
+                    className="rounded-md"
+                  />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium text-sm truncate group-hover:text-green-400 transition-colors">
-                    {song.title}
+                  <p className="text-white font-medium text-sm truncate max-w-96 roup-hover:text-green-400 transition-colors">
+                    {song.track.name}
                   </p>
-                  <p className="text-gray-400 text-xs truncate">
-                    {song.artist}
+                  <p className="text-gray-400 text-xs truncate max-w-xl">
+                    {song.track.artists.map((artist) => artist.name).join(',')}
                   </p>
                 </div>
               </div>
               <div className="flex items-center space-x-2 ml-4">
-                <span className="text-green-500 text-xs font-medium">
-                  {song.match}
+                <span className="text-green-500 text-xs font-medium flex">
+                  {song.originUser.map((user, index) =>
+                    <Image
+                      key={index}
+                      width={20}
+                      height={20}
+                      src={userMap.get(user)?.images.at(0)?.url || ''}
+                      alt='user'
+                      className="rounded-full -ml-1 first:ml-0"
+                      style={{ zIndex: song.originUser.length - index }}
+                    />)
+                  }
                 </span>
-                <div className="w-1 h-1 bg-green-500 rounded-full opacity-75"></div>
               </div>
             </div>
           ))}

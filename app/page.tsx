@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import BlenderForm from "../components/BlenderForm";
 import { AppState } from "../types/enums";
 import { Track, User } from "@spotify/web-api-ts-sdk";
@@ -19,17 +19,15 @@ export default function Home() {
 
   const [appState, setAppState] = useState<AppState>(AppState.FORM);
 
-  const userMap = new Map<string, User>();
+  const userMap = useMemo(() => {
+    const map = new Map<string, User>();
+    users.forEach((user) => map.set(user.id, user));
+    return map;
+  }, [users]);
+
   const [matchScore, setMatchScore] = useState(0);
   const [ourSong, setOurSong] = useState<Track | null>(null);
   const [playlist, setPlaylist] = useState<PlaylistTrack[]>([]);
-
-  useEffect(() => {
-    for (const user of users) {
-      console.log(user.display_name);
-    }
-    users.forEach((user) => userMap.set(user.id, user));
-  }, [users]);
 
   useEffect(() => {
     const handleAppState = async () => {
@@ -38,7 +36,7 @@ export default function Home() {
           break;
         case AppState.LOADING:
           try {
-            const trackPromises = users.map(user => getUserSongs(user.id, 13));
+            const trackPromises = users.map(user => getUserSongs(user.id, 4));
             let userTracks = await Promise.all(trackPromises);
             let userArtists = await getUserArtists(userTracks);
             console.log(userTracks);
@@ -78,7 +76,7 @@ export default function Home() {
       case AppState.SUMMARIZE:
         return <BlenderSummaryPage tasteMatch={`${matchScore}%`} songTitle={ourSong?.name || "unavailable"} setAppState={setAppState} />;
       case AppState.BLENDED:
-        return <BlenderResultsPage tasteMatch={`${matchScore}%`} ourSong={ourSong!} playlist={playlist} setAppState={setAppState} />;
+        return <BlenderResultsPage tasteMatch={`${matchScore}%`} ourSong={ourSong!} playlist={playlist} userMap={userMap} setAppState={setAppState} />;
       default:
         return <div>Default content</div>;
     }
