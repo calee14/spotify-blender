@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 export default function BlenderResultsPage() {
   const [visibleTexts, setVisibleTexts] = useState(0);
-
   // TEMP: songs for playlist mix 
   const [blendedSongs, setBlendedSongs] = useState([
     {

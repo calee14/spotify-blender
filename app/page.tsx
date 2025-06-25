@@ -10,6 +10,7 @@ import BlenderLoadingPage from "../components/BlenderLoadingPage";
 import BlenderSummaryPage from "../components/BlenderSummaryPage";
 import BlenderResultsPage from "../components/BlenderResultsPage";
 import getCcassScore from "@/util/getCcassScore";
+import getCcass from "@/util/getCcass";
 
 export default function Home() {
 
@@ -30,16 +31,17 @@ export default function Home() {
           break;
         case AppState.LOADING:
           try {
-            const trackPromises = users.map(user => getUserSongs(user.id, 1));
+            const trackPromises = users.map(user => getUserSongs(user.id, 4));
             let userTracks = await Promise.all(trackPromises);
             let userArtists = await getUserArtists(userTracks);
             console.log(userTracks);
             console.log(userArtists);
-            getCcassScore(userTracks, userArtists);
+            console.log(getCcassScore(userTracks, userArtists));
+            getCcass(userTracks, userArtists);
 
             setAppState(AppState.SUMMARIZE);
           } catch (error) {
-            console.error('error getting user songs');
+            console.error('error getting user songs', error);
             setAppState(AppState.FORM);
           }
           break;
