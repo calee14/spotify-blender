@@ -23,4 +23,5 @@ export interface PlaylistTrack {
 export interface CcassPlaylist {
   ourSong: Track;
   playlist: PlaylistTrack[];
+  sharedTracks: Track[];
 }

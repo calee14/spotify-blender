@@ -65,59 +65,61 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
   }
 
   return (
-    <div className="bg-[#131313] rounded-lg p-8 w-full max-w-md shadow-2xl">
-      <h2 className="text-white text-2xl font-extrabold mb-2 text-center">
-        spotify blender
-      </h2>
-      <p className="text-center text-sm font-medium">blend with spotify friends anytime, anywhere</p>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-[#131313] rounded-lg p-8 w-full max-w-md shadow-2xl">
+        <h2 className="text-white text-2xl font-extrabold mb-2 text-center">
+          spotify blender
+        </h2>
+        <p className="text-center text-sm font-medium">blend with spotify friends anytime, anywhere</p>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-        <div>
-          <label htmlFor="field1" className="block text-sm font-medium text-[#b3b3b3] mb-2">
-            share link of user #1
-          </label>
-          <input
-            type="text"
-            id="user1"
-            name="user1"
-            value={formData.user1}
-            onChange={handleChange}
-            className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3e3e3e] rounded-md text-white placeholder-[#6a6a6a] focus:outline-none focus:ring-2 focus:ring-[#1db954] focus:border-transparent transition-colors"
-            placeholder="https://open.spotify.com/user/31pvare2eapogu5ow2pzndpnbvnu?si=c1cb9aa3cc0945c7"
-            required
-          />
-          {user1InputError &&
-            <p className="w-full text-red-400 text-sm">{user1InputError}</p>
-          }
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <div>
+            <label htmlFor="field1" className="block text-sm font-medium text-[#b3b3b3] mb-2">
+              share link of user #1
+            </label>
+            <input
+              type="text"
+              id="user1"
+              name="user1"
+              value={formData.user1}
+              onChange={handleChange}
+              className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3e3e3e] rounded-md text-white placeholder-[#6a6a6a] focus:outline-none focus:ring-2 focus:ring-[#1db954] focus:border-transparent transition-colors"
+              placeholder="https://open.spotify.com/user/31pvare2eapogu5ow2pzndpnbvnu?si=c1cb9aa3cc0945c7"
+              required
+            />
+            {user1InputError &&
+              <p className="w-full text-red-400 text-sm">{user1InputError}</p>
+            }
 
-        </div>
+          </div>
 
-        <div>
-          <label htmlFor="field2" className="block text-sm font-medium text-[#b3b3b3] mb-2">
-            share link of user #2
-          </label>
-          <input
-            type="text"
-            id="user2"
-            name="user2"
-            value={formData.user2}
-            onChange={handleChange}
-            className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3e3e3e] rounded-md text-white placeholder-[#6a6a6a] focus:outline-none focus:ring-2 focus:ring-[#1db954] focus:border-transparent transition-colors"
-            placeholder="https://open.spotify.com/user/31pvare2eapogu5ow2pzndpnbvnu?si=c1cb9aa3cc0945c7"
-            required
-          />
-          {user2InputError &&
-            <p className="w-full text-red-400 text-sm">{user2InputError}</p>
-          }
-        </div>
+          <div>
+            <label htmlFor="field2" className="block text-sm font-medium text-[#b3b3b3] mb-2">
+              share link of user #2
+            </label>
+            <input
+              type="text"
+              id="user2"
+              name="user2"
+              value={formData.user2}
+              onChange={handleChange}
+              className="w-full px-4 py-3 bg-[#2a2a2a] border border-[#3e3e3e] rounded-md text-white placeholder-[#6a6a6a] focus:outline-none focus:ring-2 focus:ring-[#1db954] focus:border-transparent transition-colors"
+              placeholder="https://open.spotify.com/user/31pvare2eapogu5ow2pzndpnbvnu?si=c1cb9aa3cc0945c7"
+              required
+            />
+            {user2InputError &&
+              <p className="w-full text-red-400 text-sm">{user2InputError}</p>
+            }
+          </div>
 
-        <button
-          type="submit"
-          className="w-full bg-[#1db954] hover:bg-[#1ed760] text-black font-bold py-3 px-4 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1db954] focus:ring-offset-2 focus:ring-offset-[#121212]"
-        >
-          blend!
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="w-full bg-[#1db954] hover:bg-[#1ed760] text-black font-bold py-3 px-4 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1db954] focus:ring-offset-2 focus:ring-offset-[#121212]"
+          >
+            blend!
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

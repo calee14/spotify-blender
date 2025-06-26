@@ -8,6 +8,8 @@ interface ArtistFrequency {
   freq: number;
 }
 
+const MAX_SHARED_SONGS = 13;
+const MAX_SHARED_ARTIST_SONGS = 39;
 const PLAYLIST_SIZE = 52; // divisible by 13
 
 // matching algorithm
@@ -31,7 +33,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
     }
   });
 
-  playlist.push(...sharedTracks.map((track): PlaylistTrack => ({ track: track, originUser: [userTracks[0].userId, userTracks[1].userId] })));
+  playlist.push(...sharedTracks.slice(0, MAX_SHARED_SONGS).map((track): PlaylistTrack => ({ track: track, originUser: [userTracks[0].userId, userTracks[1].userId] })));
 
   // find shared artists 
   const user1Artists = userArtists[0];
@@ -181,7 +183,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
       numSharedArtistTracks -= 1;
       group = selection.newGroup;
     }
-  } while (numSharedArtistTracks > 0 && playlist.length <= 52);
+  } while (numSharedArtistTracks > 0 && playlist.length <= MAX_SHARED_ARTIST_SONGS);
 
   // if shared tracks still available choose "our song" 
   if (numSharedArtistTracks > 0 && sharedArtistFreq.length > 0) {
@@ -249,5 +251,5 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
 
   console.log("our song: ", ourSong?.name);
 
-  return { ourSong: ourSong, playlist: playlist };
+  return { ourSong: ourSong, playlist: playlist, sharedTracks: sharedTracks };
 };
