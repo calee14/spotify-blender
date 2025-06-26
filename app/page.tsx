@@ -13,6 +13,8 @@ import getCcassScore from "@/util/getCcassScore";
 import getCcass from "@/util/getCcass";
 import { PlaylistTrack } from "@/types/global";
 
+const NUM_PLAYLISTS_FETCHED = 13;
+
 export default function Home() {
 
   const [users, setUsers] = useState<User[]>([]);
@@ -28,6 +30,7 @@ export default function Home() {
   const [matchScore, setMatchScore] = useState(0);
   const [ourSong, setOurSong] = useState<Track | null>(null);
   const [playlist, setPlaylist] = useState<PlaylistTrack[]>([]);
+  const [sharedTracks, setSharedTracks] = useState<Track[]>([]);
 
   useEffect(() => {
     const handleAppState = async () => {
@@ -36,7 +39,7 @@ export default function Home() {
           break;
         case AppState.LOADING:
           try {
-            const trackPromises = users.map(user => getUserSongs(user.id, 4));
+            const trackPromises = users.map(user => getUserSongs(user.id, NUM_PLAYLISTS_FETCHED));
             let userTracks = await Promise.all(trackPromises);
             let userArtists = await getUserArtists(userTracks);
             console.log(userTracks);
@@ -45,9 +48,10 @@ export default function Home() {
             setMatchScore(matchScore);
             console.log('love score', matchScore);
 
-            const { ourSong, playlist } = getCcass(userTracks, userArtists);
+            const { ourSong, playlist, sharedTracks } = getCcass(userTracks, userArtists);
             setOurSong(ourSong);
             setPlaylist(playlist);
+            setSharedTracks(sharedTracks);
 
             setAppState(AppState.SUMMARIZE);
           } catch (error) {
@@ -76,13 +80,13 @@ export default function Home() {
       case AppState.SUMMARIZE:
         return <BlenderSummaryPage tasteMatch={`${matchScore}%`} songTitle={ourSong?.name || "unavailable"} setAppState={setAppState} />;
       case AppState.BLENDED:
-        return <BlenderResultsPage tasteMatch={`${matchScore}%`} ourSong={ourSong!} playlist={playlist} userMap={userMap} setAppState={setAppState} />;
+        return <BlenderResultsPage tasteMatch={`${matchScore}%`} ourSong={ourSong!} playlist={playlist} sharedTracks={sharedTracks} userMap={userMap} setAppState={setAppState} />;
       default:
         return <div>Default content</div>;
     }
   }
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-black items-center justify-center p-4">
       {renderAppStates()}
     </div>
   );

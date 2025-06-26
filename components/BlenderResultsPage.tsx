@@ -2,70 +2,71 @@ import { AppState } from '@/types/enums';
 import { PlaylistTrack } from '@/types/global';
 import { Track, User } from '@spotify/web-api-ts-sdk';
 import Image from 'next/image';
-import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { title } from 'node:process';
+import React, { useState, useEffect, Dispatch, SetStateAction, useMemo } from 'react';
 
 interface BlenderResultPageProps {
   tasteMatch: string;
   ourSong: Track;
   playlist: PlaylistTrack[];
+  sharedTracks: Track[];
   userMap: Map<string, User>;
   setAppState: Dispatch<SetStateAction<AppState>>;
 }
 
-export default function BlenderResultsPage({ tasteMatch, ourSong, playlist, userMap }: BlenderResultPageProps) {
+export default function BlenderResultsPage({ tasteMatch,
+  ourSong,
+  playlist,
+  sharedTracks,
+  userMap
+}: BlenderResultPageProps) {
+
   const [visibleTexts, setVisibleTexts] = useState(0);
-  // TEMP: songs for playlist mix 
-  const [blendedSongs, setBlendedSongs] = useState([
-    {
-      id: 1,
-      title: "Blinding Lights",
-      artist: "The Weeknd",
-      match: "95%",
-      albumArt: "🌟"
-    },
-    {
-      id: 2,
-      title: "Levitating",
-      artist: "Dua Lipa",
-      match: "92%",
-      albumArt: "✨"
-    },
-    {
-      id: 3,
-      title: "Stay",
-      artist: "The Kid LAROI & Justin Bieber",
-      match: "89%",
-      albumArt: "🎭"
-    },
-    {
-      id: 4,
-      title: "Good 4 U",
-      artist: "Olivia Rodrigo",
-      match: "87%",
-      albumArt: "💜"
-    },
-    {
-      id: 5,
-      title: "Heat Waves",
-      artist: "Glass Animals",
-      match: "84%",
-      albumArt: "🔥"
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredSharedTracks = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return sharedTracks;
     }
-  ]);
+    const query = searchQuery.toLowerCase().trim();
+    return sharedTracks.filter((track) =>
+      track.name.toLowerCase().startsWith(query) ||
+      track.artists.some((artist) => artist.name?.toLowerCase().startsWith(query))
+    );
+  }, [sharedTracks, searchQuery]);
 
   // containers to display result
   // for the fade in effect
   const containers = [
     {
       id: 1,
-      title: `Your Music Match is ${tasteMatch}`,
+      title: `${[...userMap.values()].map((user) => user.display_name).join(" + ")}`,
+      content: (
+        <div className="flex space-x-4">
+          {[...userMap.values()].map((user, index) =>
+            <Image
+              key={index}
+              width={65}
+              height={65}
+              src={user.images.at(0)?.url || ''}
+              alt='user'
+              className="rounded-full"
+              style={{ objectFit: 'cover' }}
+            />)
+          }
+        </div>
+      )
+    },
+    {
+      id: 2,
+      title: `Your Music Match is ${tasteMatch} `,
       subtitle: "You should be best friends if not already!",
       content: (
         <div></div>
       )
     },
     {
-      id: 2,
+      id: 3,
       title: "Your Song",
       subtitle: "",
       content: (
@@ -77,6 +78,7 @@ export default function BlenderResultsPage({ tasteMatch, ourSong, playlist, user
               src={ourSong.album.images.at(0)?.url || ""}
               alt="🌟"
               className="rounded-md"
+              style={{ objectFit: 'cover' }}
             />
           </div>
           <div>
@@ -85,11 +87,10 @@ export default function BlenderResultsPage({ tasteMatch, ourSong, playlist, user
               {ourSong.artists.map((artist) => artist.name).join(',')}
             </p></div>
         </div>
-
       )
     },
     {
-      id: 3,
+      id: 4,
       title: "Your Blended Playlist",
       subtitle: "A perfect mix",
       content: (
@@ -101,20 +102,22 @@ export default function BlenderResultsPage({ tasteMatch, ourSong, playlist, user
             >
               <div className="flex items-center space-x-3 flex-1">
                 <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-md flex items-center justify-center flex-shrink-0">
-                  {/* <span className="text-sm">{song.albumArt}</span> */}
                   <Image
                     width={40}
                     height={40}
                     src={song.track.album.images.at(0)?.url || ""}
                     alt="🌟"
                     className="rounded-md"
+                    style={{ objectFit: 'cover' }}
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium text-sm truncate max-w-96 roup-hover:text-green-400 transition-colors">
-                    {song.track.name}
+                  <p className="text-white font-medium text-sm truncate max-w-96 group-hover:text-green-400 transition-colors">
+                    <a href={song.track.uri} className='hover:underline'>
+                      {song.track.name}
+                    </a>
                   </p>
-                  <p className="text-gray-400 text-xs truncate max-w-xl">
+                  <p className="text-gray-400 text-xs truncate max-w-96">
                     {song.track.artists.map((artist) => artist.name).join(',')}
                   </p>
                 </div>
@@ -129,7 +132,7 @@ export default function BlenderResultsPage({ tasteMatch, ourSong, playlist, user
                       src={userMap.get(user)?.images.at(0)?.url || ''}
                       alt='user'
                       className="rounded-full -ml-1 first:ml-0"
-                      style={{ zIndex: song.originUser.length - index }}
+                      style={{ objectFit: 'cover', zIndex: song.originUser.length - index }}
                     />)
                   }
                 </span>
@@ -140,7 +143,7 @@ export default function BlenderResultsPage({ tasteMatch, ourSong, playlist, user
       )
     },
     {
-      id: 4,
+      id: 5,
       title: "Search Shared Songs",
       subtitle: "Find songs you both love",
       content: (
@@ -149,6 +152,8 @@ export default function BlenderResultsPage({ tasteMatch, ourSong, playlist, user
           <div className="relative">
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search for songs..."
               className="w-full bg-gray-900/70 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors"
             />
@@ -160,30 +165,33 @@ export default function BlenderResultsPage({ tasteMatch, ourSong, playlist, user
           </div>
 
           {/* Song List */}
-          <div className="space-y-2">
-            {blendedSongs.map((song, index) => (
+          <div className="max-h-96 overflow-scroll">
+            {filteredSharedTracks.map((song, index) => (
               <div
-                key={`search-${song.id}`}
+                key={`search - ${song.id} `}
                 className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"
               >
                 <div className="flex items-center space-x-3 flex-1">
                   <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-md flex items-center justify-center flex-shrink-0">
-                    <span className="text-sm">{song.albumArt}</span>
+                    <Image
+                      width={40}
+                      height={40}
+                      src={song.album.images.at(0)?.url || ""}
+                      alt="🌟"
+                      className="rounded-md"
+                      style={{ objectFit: 'cover' }}
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-white font-medium text-sm truncate group-hover:text-green-400 transition-colors">
-                      {song.title}
+                      <a href={song.uri} className='hover:underline'>
+                        {song.name}
+                      </a>
                     </p>
                     <p className="text-gray-400 text-xs truncate">
-                      {song.artist}
+                      {song.artists.map((artist) => artist.name).join(',')}
                     </p>
                   </div>
-                </div>
-                <div className="flex items-center space-x-2 ml-4">
-                  <span className="text-green-500 text-xs font-medium">
-                    {song.match}
-                  </span>
-                  <div className="w-1 h-1 bg-green-500 rounded-full opacity-75"></div>
                 </div>
               </div>
             ))}
@@ -208,13 +216,13 @@ export default function BlenderResultsPage({ tasteMatch, ourSong, playlist, user
   }, [containers.length]);
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center px-6 py-24">
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center px-6 py-12">
       <div className="max-w-xl w-full space-y-8">
         {containers.map((container, index) => (
           <div
             key={container.id}
-            className={`transition-opacity duration-1000 ${index < visibleTexts ? 'opacity-100' : 'opacity-0'
-              }`}
+            className={`transition - opacity duration - 1000 ${index < visibleTexts ? 'opacity-100' : 'opacity-0'
+              } `}
           >
             <div className="">
               <div className="mb-4">
