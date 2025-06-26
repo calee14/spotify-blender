@@ -2,7 +2,6 @@ import { AppState } from '@/types/enums';
 import { PlaylistTrack } from '@/types/global';
 import { Track, User } from '@spotify/web-api-ts-sdk';
 import Image from 'next/image';
-import { title } from 'node:process';
 import React, { useState, useEffect, Dispatch, SetStateAction, useMemo } from 'react';
 
 interface BlenderResultPageProps {
@@ -50,7 +49,7 @@ export default function BlenderResultsPage({ tasteMatch,
               height={65}
               src={user.images.at(0)?.url || ''}
               alt='user'
-              className="rounded-full"
+              className="rounded-full w-[65px] h-[65px]"
               style={{ objectFit: 'cover' }}
             />)
           }
@@ -70,22 +69,27 @@ export default function BlenderResultsPage({ tasteMatch,
       title: "Your Song",
       subtitle: "",
       content: (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 group">
           <div className="w-16 h-16 flex items-center justify-center">
             <Image
               width={60}
               height={60}
               src={ourSong.album.images.at(0)?.url || ""}
               alt="🌟"
-              className="rounded-md"
+              className="rounded-md w-[60px] h-[60px]"
               style={{ objectFit: 'cover' }}
             />
           </div>
-          <div>
-            <p className="text-white font-semibold">{ourSong.name}</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-white font-semibold group-hover:text-green-400 transition-colors">
+              <a href={ourSong.uri} className='hover:underline'>
+                {ourSong.name}
+              </a>
+            </p>
             <p className="text-gray-400 text-xs truncate">
               {ourSong.artists.map((artist) => artist.name).join(',')}
-            </p></div>
+            </p>
+          </div>
         </div>
       )
     },
@@ -101,13 +105,13 @@ export default function BlenderResultsPage({ tasteMatch,
               className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"
             >
               <div className="flex items-center space-x-3 flex-1">
-                <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-md flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-md flex items-center justify-center flex-shrink-0">
                   <Image
                     width={40}
                     height={40}
                     src={song.track.album.images.at(0)?.url || ""}
                     alt="🌟"
-                    className="rounded-md"
+                    className="rounded-md w-[40px] h-[40px]"
                     style={{ objectFit: 'cover' }}
                   />
                 </div>
@@ -131,7 +135,7 @@ export default function BlenderResultsPage({ tasteMatch,
                       height={20}
                       src={userMap.get(user)?.images.at(0)?.url || ''}
                       alt='user'
-                      className="rounded-full -ml-1 first:ml-0"
+                      className="rounded-full w-[20px] h-[20px] -ml-1 first:ml-0"
                       style={{ objectFit: 'cover', zIndex: song.originUser.length - index }}
                     />)
                   }
@@ -172,13 +176,13 @@ export default function BlenderResultsPage({ tasteMatch,
                 className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"
               >
                 <div className="flex items-center space-x-3 flex-1">
-                  <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-md flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 rounded-md flex items-center justify-center flex-shrink-0">
                     <Image
                       width={40}
                       height={40}
                       src={song.album.images.at(0)?.url || ""}
                       alt="🌟"
-                      className="rounded-md"
+                      className="rounded-md w-[40px] h-[40px]"
                       style={{ objectFit: 'cover' }}
                     />
                   </div>

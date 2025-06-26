@@ -33,6 +33,13 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
     }
   });
 
+  // find our song if shared songs exist
+  // TODO: HERE KK
+  //
+
+
+
+  // add shared songs to playlist
   playlist.push(...sharedTracks.slice(0, MAX_SHARED_SONGS).map((track): PlaylistTrack => ({ track: track, originUser: [userTracks[0].userId, userTracks[1].userId] })));
 
   // find shared artists 
@@ -186,7 +193,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
   } while (numSharedArtistTracks > 0 && playlist.length <= MAX_SHARED_ARTIST_SONGS);
 
   // if shared tracks still available choose "our song" 
-  if (numSharedArtistTracks > 0 && sharedArtistFreq.length > 0) {
+  if (!ourSong && numSharedArtistTracks > 0 && sharedArtistFreq.length > 0) {
     const i = findAvailableArtist();
     if (i !== -1) {
       prevI = i;
