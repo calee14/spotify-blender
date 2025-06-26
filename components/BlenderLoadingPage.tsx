@@ -25,10 +25,7 @@ export default function BlenderLoadingPage({ userNames }: BlenderLoadingPageProp
       `Mixing ${user1} and ${user2}'s music...`,
       `Finding compatibility between ${user1} and ${user2}...`,
       "Loading your playlist...",
-      `Creating the perfect blend for ${user1}...`,
-      "Getting the party started...",
       `Syncing ${user2}'s favorite tracks...`,
-      `Preparing ${user1} and ${user2}'s experience...`,
       "Tuning the beat..."
     ];
   }
