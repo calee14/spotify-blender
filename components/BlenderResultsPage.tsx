@@ -69,7 +69,7 @@ export default function BlenderResultsPage({ tasteMatch,
       title: "Your Song",
       subtitle: "",
       content: (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 group">
           <div className="w-16 h-16 flex items-center justify-center">
             <Image
               width={60}
@@ -80,8 +80,8 @@ export default function BlenderResultsPage({ tasteMatch,
               style={{ objectFit: 'cover' }}
             />
           </div>
-          <div>
-            <p className="text-white font-semibold">
+          <div className="flex-1 min-w-0">
+            <p className="text-white font-semibold group-hover:text-green-400 transition-colors">
               <a href={ourSong.uri} className='hover:underline'>
                 {ourSong.name}
               </a>
