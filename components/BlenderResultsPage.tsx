@@ -34,6 +34,20 @@ export default function BlenderResultsPage({ tasteMatch,
     );
   }, [sharedTracks, searchQuery]);
 
+  function shuffleArray<T>(array: T[]): T[] {
+    const shuffled = [...array]; // Create a copy to avoid mutating original
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // Swap elements
+    }
+
+    return shuffled;
+  }
+
+  const shuffledPlaylist = useMemo(() => {
+    return shuffleArray(playlist);
+  }, [playlist])
   // containers to display result
   // for the fade in effect
   const containers = [
@@ -99,7 +113,7 @@ export default function BlenderResultsPage({ tasteMatch,
       subtitle: "A perfect mix",
       content: (
         <div className="">
-          {playlist.map((song, index) => (
+          {shuffledPlaylist.map((song, index) => (
             <div
               key={index + 1}
               className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"

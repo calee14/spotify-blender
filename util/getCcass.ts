@@ -158,6 +158,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
   // find the next shared artist with tracks
   const findAvailableArtist = () => {
     prevI += 1;
+    prevI = prevI % sharedArtistFreq.length;
     for (let i = 0; i < sharedArtistFreq.length; i++) {
       if (sharedArtistFreq[(prevI + i) % sharedArtistFreq.length].freq > 0) {
         return (prevI + i) % sharedArtistFreq.length;
@@ -194,6 +195,9 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
 
   // if shared tracks still available choose "our song" 
   if (!ourSong && numSharedArtistTracks > 0 && sharedArtistFreq.length > 0) {
+    // introduce randomness to selecting shared artist for shared song
+    prevI += Math.floor(Math.random() * sharedArtistFreq.length) % sharedArtistFreq.length;
+    prevI = prevI % sharedArtistFreq.length;
     const i = findAvailableArtist();
     if (i !== -1) {
       prevI = i;

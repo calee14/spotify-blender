@@ -39,13 +39,13 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
 
     let users: User[] = [];
 
-    let success = true;
+    let successUserFetch = true;
     // check users exist
     await getUser(userId1).then(({ success, user }) => {
       if (success) {
         users.push(user!);
       } else {
-        success = false;
+        successUserFetch = false;
         setUser1InputError('please enter a valid share-profile-link for this user');
       }
     });
@@ -53,12 +53,12 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
       if (success) {
         users.push(user!);
       } else {
-        success = false;
+        successUserFetch = false;
         setUser2InputError('please enter a valid share-profile-link for this user');
       }
     });
 
-    if (success) {
+    if (successUserFetch) {
       setUsers(users);
       setAppState(AppState.LOADING);
     }
