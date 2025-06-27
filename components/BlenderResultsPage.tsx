@@ -34,8 +34,39 @@ export default function BlenderResultsPage({ tasteMatch,
     );
   }, [sharedTracks, searchQuery]);
 
+  function getMatchMessage(tasteMatch: string) {
+    const justNumber = tasteMatch.replace(/[^\d.]/g, '');
+    const match = Number(justNumber);
+    if (match >= 91) {
+      return {
+        title: `It's true love at first listen 🫀🎧 (${match}%)`,
+        subtitle: "It's fate. You two are in sync.",
+      };
+    } else if (match >= 78) {
+      return {
+        title: `You're musical soulmates 🎵💞 (${match}%)`,
+        subtitle: "Chances are you probably already share pre-marital playlists. Might as well tie the knot!",
+      };
+    } else if (match >= 65) {
+      return {
+        title: `You share the same rhythm 🎶 (${match}%)`,
+        subtitle: "Do I hear the same melody?",
+      };
+    } else if (match >= 52) {
+      return {
+        title: `Some overlap, some mystery... 🔍 (${match}%)`,
+        subtitle: "This could grow into something.",
+      };
+    } else {
+      return {
+        title: `Maybe not your other half... but the other half of music? 🎲 (${match}%)`,
+        subtitle: "Opposites attract... sometimes.",
+      };
+    }
+  }
   // containers to display result
   // for the fade in effect
+  const matchMessage = getMatchMessage(tasteMatch);
   const containers = [
     {
       id: 1,
@@ -58,8 +89,8 @@ export default function BlenderResultsPage({ tasteMatch,
     },
     {
       id: 2,
-      title: `Your Music Match is ${tasteMatch} `,
-      subtitle: "You should be best friends if not already!",
+      title: matchMessage.title,
+      subtitle: matchMessage.subtitle,
       content: (
         <div></div>
       )
