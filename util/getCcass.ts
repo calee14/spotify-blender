@@ -98,7 +98,8 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
   });
 
   sharedArtistFreq.sort((a, b) => b.freq - a.freq);
-
+  console.log('shared artists', sharedArtists.map(a => a.artist.name));
+  console.log('shared artist freq', sharedArtistFreq.map(m => `${m.artist.artist.name} ${m.freq}`))
   // helper func  to select and remove a random track
   function selectAndRemoveTrack(
     artistId: string,
@@ -172,7 +173,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
     Array.from(user2ArtistTracks.values()).reduce((acc, val) => acc + val.length, 0);
 
   let group = true;
-  let prevI = 0;
+  let prevI = -1;
 
   do {
     if (sharedArtistFreq.length == 0) { break; }
@@ -180,7 +181,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
     if (i === -1) { break; }
     prevI = i;
     const artist = sharedArtistFreq[i].artist;
-
+    console.log(artist.artist.name, i);
     const selection = handleTrackSelection(
       group, i, artist, user1ArtistTracks, user2ArtistTracks,
       sharedArtistFreq, userArtists

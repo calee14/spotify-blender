@@ -220,7 +220,7 @@ export default function BlenderResultsPage({ tasteMatch,
 
           {/* Song List */}
           <div className="max-h-96 overflow-scroll">
-            {filteredSharedTracks.map((song, index) => (
+            {filteredSharedTracks.map((song) => (
               <div
                 key={`search - ${song.id} `}
                 className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"
