@@ -40,8 +40,8 @@ export default function Home() {
         case AppState.LOADING:
           try {
             const trackPromises = users.map(user => getUserSongs(user.id, NUM_PLAYLISTS_FETCHED));
-            let userTracks = await Promise.all(trackPromises);
-            let userArtists = await getUserArtists(userTracks);
+            const userTracks = await Promise.all(trackPromises);
+            const userArtists = await getUserArtists(userTracks);
             console.log(userTracks);
             console.log(userArtists);
             const matchScore = getCcassScore(userTracks, userArtists);

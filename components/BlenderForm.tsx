@@ -5,6 +5,7 @@ import getUserIdFromUrl from "../util/getUserIdFromUrl";
 import { getUser } from "../app/actions/spotify";
 import { User } from "@spotify/web-api-ts-sdk";
 import { AppState } from "../types/enums";
+import { useRouter } from "next/navigation";
 
 interface BlenderFormProps {
   setUsers: Dispatch<SetStateAction<User[]>>;
@@ -16,10 +17,14 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
     user1: '',
     user2: ''
   });
-
   const [user1InputError, setUser1InputError] = useState('');
   const [user2InputError, setUser2InputError] = useState('');
+  const router = useRouter();
+  const [isVisible, setIsVisible] = useState(false);
 
+  useEffect(() => {
+    setIsVisible(true);
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -37,15 +42,15 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
     const userId1 = getUserIdFromUrl(formData['user1']);
     const userId2 = getUserIdFromUrl(formData['user2']);
 
-    let users: User[] = [];
+    const users: User[] = [];
 
-    let success = true;
+    let successUserFetch = true;
     // check users exist
     await getUser(userId1).then(({ success, user }) => {
       if (success) {
         users.push(user!);
       } else {
-        success = false;
+        successUserFetch = false;
         setUser1InputError('please enter a valid share-profile-link for this user');
       }
     });
@@ -53,12 +58,12 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
       if (success) {
         users.push(user!);
       } else {
-        success = false;
+        successUserFetch = false;
         setUser2InputError('please enter a valid share-profile-link for this user');
       }
     });
 
-    if (success) {
+    if (successUserFetch) {
       setUsers(users);
       setAppState(AppState.LOADING);
     }
@@ -66,9 +71,9 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-[#131313] rounded-lg p-8 w-full max-w-md shadow-2xl">
+      <div className={`bg-[#131313] rounded-lg p-8 w-full max-w-md shadow-2xl duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
         <h2 className="text-white text-2xl font-extrabold mb-2 text-center">
-          spotify blender
+          🌟 spotify blender 🌟
         </h2>
         <p className="text-center text-sm font-medium">blend with spotify friends anytime, anywhere</p>
 
@@ -119,7 +124,13 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
             blend!
           </button>
         </form>
-      </div>
-    </div>
+
+        <div className="mt-5">
+          <button onClick={() => router.push("/sharelink")} className="text-green-400 text-sm hover:underline">
+            Need help finding share link?
+          </button>
+        </div>
+      </div >
+    </div >
   );
 }
