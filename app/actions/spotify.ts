@@ -36,7 +36,7 @@ export async function getArtistsFromSongs(songs: Track[]) {
 
     const tempUniqueArtistIds = Array.from(uniqueArtistIds);
     for (let i = 0; i < tempUniqueArtistIds.length; i += 50) {
-      const chunk = tempUniqueArtistIds.slice(i, i + 50);
+      const chunk = tempUniqueArtistIds.slice(i, i + 50).filter(artist => artist !== null);
       const artistChunk = await spotifySDK.artists.get(chunk);
       artists.push(...artistChunk);
     }

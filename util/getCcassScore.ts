@@ -19,9 +19,9 @@ export default function getCcassScore(userTracks: UserTracks[], userArtists: Use
 
   const sharedCount = sharedTracks.length;
 
-  // 30 shared tracks is a max 80 points
-  const maxSongScore = 80;
-  const songScore = Math.min((sharedCount / 30) * maxSongScore, maxSongScore);
+  // 30 shared tracks is a max 52 points
+  const maxSongScore = 38;
+  const songScore = Math.min((sharedCount / 10) * maxSongScore, maxSongScore);
 
   // shared artists
   const user1Artists = userArtists[0];
@@ -36,7 +36,7 @@ export default function getCcassScore(userTracks: UserTracks[], userArtists: Use
   });
 
   // shared artist points maxes at 10
-  const artistScore = Math.min(sharedArtists.length * 1.5, 10);
+  const artistScore = Math.min(sharedArtists.length * 13, 52);
 
   // artist bonus maxes at 10
   const user1ArtistTrackMap = new Map<string, Set<string>>();
@@ -63,7 +63,7 @@ export default function getCcassScore(userTracks: UserTracks[], userArtists: Use
     for (const id of songs1) {
       if (songs2.has(id)) shared++;
     }
-    if (shared >= 3) deepArtistBonus += 2.5;
+    if (shared >= 2) deepArtistBonus += 1;
   }
 
   deepArtistBonus = Math.min(deepArtistBonus, 10);
