@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "spotify blender",
+  title: "blendify",
   description: "blend two spotify listeners anytime, anywhere",
 };
 
