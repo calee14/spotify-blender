@@ -98,7 +98,8 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
   });
 
   sharedArtistFreq.sort((a, b) => b.freq - a.freq);
-
+  console.log('shared artists', sharedArtists.map(a => a.artist.name));
+  console.log('shared artist freq', sharedArtistFreq.map(m => `${m.artist.artist.name} ${m.freq}`))
   // helper func  to select and remove a random track
   function selectAndRemoveTrack(
     artistId: string,
@@ -158,6 +159,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
   // find the next shared artist with tracks
   const findAvailableArtist = () => {
     prevI += 1;
+    prevI = prevI % sharedArtistFreq.length;
     for (let i = 0; i < sharedArtistFreq.length; i++) {
       if (sharedArtistFreq[(prevI + i) % sharedArtistFreq.length].freq > 0) {
         return (prevI + i) % sharedArtistFreq.length;
@@ -171,7 +173,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
     Array.from(user2ArtistTracks.values()).reduce((acc, val) => acc + val.length, 0);
 
   let group = true;
-  let prevI = 0;
+  let prevI = -1;
 
   do {
     if (sharedArtistFreq.length == 0) { break; }
@@ -179,7 +181,7 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
     if (i === -1) { break; }
     prevI = i;
     const artist = sharedArtistFreq[i].artist;
-
+    console.log(artist.artist.name, i);
     const selection = handleTrackSelection(
       group, i, artist, user1ArtistTracks, user2ArtistTracks,
       sharedArtistFreq, userArtists
@@ -194,6 +196,9 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
 
   // if shared tracks still available choose "our song" 
   if (!ourSong && numSharedArtistTracks > 0 && sharedArtistFreq.length > 0) {
+    // introduce randomness to selecting shared artist for shared song
+    prevI += Math.floor(Math.random() * sharedArtistFreq.length) % sharedArtistFreq.length;
+    prevI = prevI % sharedArtistFreq.length;
     const i = findAvailableArtist();
     if (i !== -1) {
       prevI = i;
