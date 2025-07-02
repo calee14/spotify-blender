@@ -23,6 +23,7 @@ export default function BlenderResultsPage({ tasteMatch,
   const [visibleTexts, setVisibleTexts] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // memo for search shared songs
   const filteredSharedTracks = useMemo(() => {
     if (!searchQuery.trim()) {
       return sharedTracks;
@@ -34,6 +35,23 @@ export default function BlenderResultsPage({ tasteMatch,
     );
   }, [sharedTracks, searchQuery]);
 
+  // shuffle the playlist
+  function shuffleArray<T>(array: T[]): T[] {
+    const shuffled = [...array]; // Create a copy to avoid mutating original
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // Swap elements
+    }
+
+    return shuffled;
+  }
+
+  const shuffledPlaylist = useMemo(() => {
+    return shuffleArray(playlist);
+  }, [playlist])
+
+  // get matching msgs
   function getMatchMessage(tasteMatch: string) {
     const justNumber = tasteMatch.replace(/[^\d.]/g, '');
     const match = Number(justNumber);
@@ -64,6 +82,7 @@ export default function BlenderResultsPage({ tasteMatch,
       };
     }
   }
+
   // containers to display result
   // for the fade in effect
   const matchMessage = getMatchMessage(tasteMatch);
@@ -100,7 +119,7 @@ export default function BlenderResultsPage({ tasteMatch,
       title: "Your Song",
       subtitle: "",
       content: (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 group">
           <div className="w-16 h-16 flex items-center justify-center">
             <Image
               width={60}
@@ -111,8 +130,8 @@ export default function BlenderResultsPage({ tasteMatch,
               style={{ objectFit: 'cover' }}
             />
           </div>
-          <div>
-            <p className="text-white font-semibold">
+          <div className="flex-1 min-w-0">
+            <p className="text-white font-semibold group-hover:text-green-400 transition-colors">
               <a href={ourSong.uri} className='hover:underline'>
                 {ourSong.name}
               </a>
@@ -130,7 +149,7 @@ export default function BlenderResultsPage({ tasteMatch,
       subtitle: "A perfect mix",
       content: (
         <div className="">
-          {playlist.map((song, index) => (
+          {shuffledPlaylist.map((song, index) => (
             <div
               key={index + 1}
               className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"
@@ -201,7 +220,7 @@ export default function BlenderResultsPage({ tasteMatch,
 
           {/* Song List */}
           <div className="max-h-96 overflow-scroll">
-            {filteredSharedTracks.map((song, index) => (
+            {filteredSharedTracks.map((song) => (
               <div
                 key={`search - ${song.id} `}
                 className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"

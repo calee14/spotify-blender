@@ -1,7 +1,6 @@
 // app/actions/spotify.ts 
 'use server';
 
-import { IBM_Plex_Sans_JP } from "next/font/google";
 import { spotifySDK } from "@/lib/spotify";
 import { Artist, MaxInt, Track } from "@spotify/web-api-ts-sdk";
 
@@ -27,7 +26,7 @@ export async function getUserPlaylist(userId: string, limit: MaxInt<50> = 10) {
 
 export async function getArtistsFromSongs(songs: Track[]) {
   try {
-    let artists: Artist[] = [];
+    const artists: Artist[] = [];
 
     const uniqueArtistIds = new Set<string>();
 
@@ -37,7 +36,7 @@ export async function getArtistsFromSongs(songs: Track[]) {
 
     const tempUniqueArtistIds = Array.from(uniqueArtistIds);
     for (let i = 0; i < tempUniqueArtistIds.length; i += 50) {
-      const chunk = tempUniqueArtistIds.slice(i, i + 50);
+      const chunk = tempUniqueArtistIds.slice(i, i + 50).filter(artist => artist !== null);
       const artistChunk = await spotifySDK.artists.get(chunk);
       artists.push(...artistChunk);
     }
