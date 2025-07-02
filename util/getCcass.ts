@@ -34,9 +34,39 @@ export default function getCcass(userTracks: UserTracks[], userArtists: UserArti
   });
 
   // find our song if shared songs exist
-  // TODO: HERE KK
-  //
-
+  // finds our song which is the most frequently appearing shared track
+  if (sharedTracks.length > 0) {
+    const trackFrequencyMap = new Map<string, { track: Track; count: number }>();
+    [user1Tracks, user2Tracks].forEach(userTrackData => {
+      userTrackData.tracks.forEach(track => {
+        if (uniqueSharedTrackIds.has(track.id)) {
+          const existing = trackFrequencyMap.get(track.id);
+          if (existing) {
+            existing.count += 1;
+          } else {
+            trackFrequencyMap.set(track.id, { track, count: 1 });
+          }
+        }
+      });
+    });
+    
+    // track w appears most frequently
+    let maxCount = 0;
+    let mostFrequentTrack: Track | null = null;
+    
+    trackFrequencyMap.forEach(({ track, count }) => {
+      if (count > maxCount) {
+        maxCount = count;
+        mostFrequentTrack = track;
+      }
+    });
+  
+  // make our song to the most frequent shared track
+  if (mostFrequentTrack && maxCount > 1) {
+    ourSong = mostFrequentTrack;
+    console.log(`Selected "our song": ${(ourSong as Track).name} (appeared ${maxCount} times)`);
+  }
+}
 
 
   // add shared songs to playlist
