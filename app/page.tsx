@@ -31,6 +31,7 @@ export default function Home() {
   const [ourSong, setOurSong] = useState<Track | null>(null);
   const [playlist, setPlaylist] = useState<PlaylistTrack[]>([]);
   const [sharedTracks, setSharedTracks] = useState<Track[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const handleAppState = async () => {
@@ -42,6 +43,12 @@ export default function Home() {
             const trackPromises = users.map(user => getUserSongs(user.id, NUM_PLAYLISTS_FETCHED));
             const userTracks = await Promise.all(trackPromises);
             const userArtists = await getUserArtists(userTracks);
+
+            if (userTracks.some((userTracks => userTracks.tracks.length == 0))) {
+              setErrorMessage("at least one user has no songs. please make sure both users have public playlists with at least one song.")
+              throw Error("at least one user has no songs");
+            }
+
             console.log(userTracks);
             console.log(userArtists);
             const matchScore = getCcassScore(userTracks, userArtists);
@@ -74,7 +81,7 @@ export default function Home() {
   const renderAppStates = () => {
     switch (appState) {
       case AppState.FORM:
-        return <BlenderForm setUsers={setUsers} setAppState={setAppState} />;
+        return <BlenderForm setUsers={setUsers} setAppState={setAppState} errorMessage={errorMessage} />;
       case AppState.LOADING:
         return <BlenderLoadingPage userNames={users.map((u) => u.display_name)} />;
       case AppState.SUMMARIZE:
