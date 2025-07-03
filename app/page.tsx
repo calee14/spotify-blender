@@ -45,7 +45,7 @@ export default function Home() {
             const userArtists = await getUserArtists(userTracks);
 
             if (userTracks.some((userTracks => userTracks.tracks.length == 0))) {
-              setErrorMessage("at least one user has no songs. please make sure both users have public playlists with at least one song.")
+              setErrorMessage("at least one user has no songs. please make sure both users have public playlists on their profile with at least one song.")
               throw Error("at least one user has no songs");
             }
 

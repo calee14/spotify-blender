@@ -67,7 +67,7 @@ export default function BlenderLoadingPage({ userNames }: BlenderLoadingPageProp
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="w-3 h-3 bg-green-500 rounded-full animate-pulse"
+              className="w-3 h-3 bg-[#1db954] rounded-full animate-pulse"
               style={{
                 animationDelay: `${i * 0.2}s`,
                 animationDuration: '2.6s'

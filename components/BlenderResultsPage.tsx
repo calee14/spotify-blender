@@ -131,7 +131,7 @@ export default function BlenderResultsPage({ tasteMatch,
             />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-white font-semibold max-w-52 sm:max-w-96 truncate group-hover:text-green-400 transition-colors">
+            <p className="text-white font-semibold max-w-52 sm:max-w-96 truncate group-hover:text-[#1db954] transition-colors">
               <a href={ourSong.uri} className='hover:underline'>
                 {ourSong.name}
               </a>
@@ -166,7 +166,7 @@ export default function BlenderResultsPage({ tasteMatch,
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium text-sm truncate max-w-52 sm:max-w-96 group-hover:text-green-400 transition-colors">
+                  <p className="text-white font-medium text-sm truncate max-w-52 sm:max-w-96 group-hover:text-[#1db954] transition-colors">
                     <a href={song.track.uri} className='hover:underline'>
                       {song.track.name}
                     </a>
@@ -177,7 +177,7 @@ export default function BlenderResultsPage({ tasteMatch,
                 </div>
               </div>
               <div className="flex items-center space-x-2 ml-4">
-                <span className="text-green-500 text-xs font-medium flex">
+                <span className="text-xs font-medium flex">
                   {song.originUser.map((user, index) =>
                     <Image
                       key={index}
@@ -237,7 +237,7 @@ export default function BlenderResultsPage({ tasteMatch,
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium text-sm truncate max-w-52 sm:max-w-96 group-hover:text-green-400 transition-colors">
+                    <p className="text-white font-medium text-sm truncate max-w-52 sm:max-w-96 group-hover:text-[#1db954] transition-colors">
                       <a href={song.uri} className='hover:underline'>
                         {song.name}
                       </a>

@@ -37,8 +37,8 @@ export default function ShareLink() {
           How to find the share link
         </h2>
         <div className="mb-7 mt-7">
-          <p>Visit the user&aposs; Spotify profile. </p>
-          <p>Click on the 3-dots button which will display a drop down.</p>
+          <p>{"Visit the user's Spotify profile."}</p>
+          < p > Click on the 3-dots button which will display a drop down.</p>
           <p>Click on the &quot;Copy link to profile&quot; button to copy share link.</p>
         </div>
         <Image

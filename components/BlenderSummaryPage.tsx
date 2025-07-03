@@ -104,7 +104,7 @@ export default function BlenderSummaryPage({
           <div
             key={index}
             className={`w-4 h-4 rounded-full transition-all duration-500 ${index === currentStep
-              ? 'bg-green-500 scale-125'
+              ? 'bg-[#1db954] scale-125'
               : index < currentStep
                 ? 'bg-green-300'
                 : 'bg-gray-600'
