@@ -137,7 +137,7 @@ export default function BlenderForm({ setUsers, setAppState, errorMessage }: Ble
           <p className="w-full text-red-400 text-sm">{errorMessage}</p>
         }
       </div>
-      <div className="text-sm absolute bottom-2 right-2">
+      <div className="text-sm fixed bottom-2 right-2">
         <ClipboardButton value="contactblendifyapp@gmail.com">
           <p className="font-bold text-[#1db954]">contact us!</p>
         </ClipboardButton>
