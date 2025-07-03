@@ -131,12 +131,12 @@ export default function BlenderResultsPage({ tasteMatch,
             />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-white font-semibold group-hover:text-green-400 transition-colors">
+            <p className="text-white font-semibold max-w-52 sm:max-w-96 truncate group-hover:text-green-400 transition-colors">
               <a href={ourSong.uri} className='hover:underline'>
                 {ourSong.name}
               </a>
             </p>
-            <p className="text-gray-400 text-xs truncate">
+            <p className="text-gray-400 text-xs truncate max-w-52 sm:max-w-96">
               {ourSong.artists.map((artist) => artist.name).join(',')}
             </p>
           </div>
@@ -166,12 +166,12 @@ export default function BlenderResultsPage({ tasteMatch,
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium text-sm truncate max-w-96 group-hover:text-green-400 transition-colors">
+                  <p className="text-white font-medium text-sm truncate max-w-52 sm:max-w-96 group-hover:text-green-400 transition-colors">
                     <a href={song.track.uri} className='hover:underline'>
                       {song.track.name}
                     </a>
                   </p>
-                  <p className="text-gray-400 text-xs truncate max-w-96">
+                  <p className="text-gray-400 text-xs truncate max-w-52 sm:max-w-96">
                     {song.track.artists.map((artist) => artist.name).join(',')}
                   </p>
                 </div>
@@ -237,12 +237,12 @@ export default function BlenderResultsPage({ tasteMatch,
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium text-sm truncate group-hover:text-green-400 transition-colors">
+                    <p className="text-white font-medium text-sm truncate max-w-52 sm:max-w-96 group-hover:text-green-400 transition-colors">
                       <a href={song.uri} className='hover:underline'>
                         {song.name}
                       </a>
                     </p>
-                    <p className="text-gray-400 text-xs truncate">
+                    <p className="text-gray-400 text-xs truncate max-w-52 sm:max-w-96">
                       {song.artists.map((artist) => artist.name).join(',')}
                     </p>
                   </div>
