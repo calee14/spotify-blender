@@ -6,6 +6,7 @@ import { getUser } from "../app/actions/spotify";
 import { User } from "@spotify/web-api-ts-sdk";
 import { AppState } from "../types/enums";
 import { useRouter } from "next/navigation";
+import ClipboardButton from "./ClipboardButton";
 
 interface BlenderFormProps {
   setUsers: Dispatch<SetStateAction<User[]>>;
@@ -127,7 +128,7 @@ export default function BlenderForm({ setUsers, setAppState, errorMessage }: Ble
         </form>
 
         <div className="mt-5">
-          <button onClick={() => router.push("/sharelink")} className="text-green-400 text-sm hover:underline">
+          <button onClick={() => router.push("/sharelink")} className="text-[#1db954] text-sm hover:underline">
             need help finding share link?
           </button>
         </div>
@@ -135,7 +136,12 @@ export default function BlenderForm({ setUsers, setAppState, errorMessage }: Ble
         {errorMessage &&
           <p className="w-full text-red-400 text-sm">{errorMessage}</p>
         }
-      </div >
-    </div >
+      </div>
+      <div className="text-sm absolute bottom-2 right-2">
+        <ClipboardButton value="contactblendifyapp@gmail.com">
+          <p className="font-bold text-[#1db954]">contact us!</p>
+        </ClipboardButton>
+      </div>
+    </div>
   );
 }
