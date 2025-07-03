@@ -10,9 +10,10 @@ import { useRouter } from "next/navigation";
 interface BlenderFormProps {
   setUsers: Dispatch<SetStateAction<User[]>>;
   setAppState: Dispatch<SetStateAction<AppState>>;
+  errorMessage: string;
 };
 
-export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps) {
+export default function BlenderForm({ setUsers, setAppState, errorMessage }: BlenderFormProps) {
   const [formData, setFormData] = useState({
     user1: '',
     user2: ''
@@ -73,7 +74,7 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
     <div className="min-h-screen flex items-center justify-center">
       <div className={`bg-[#131313] rounded-lg p-8 w-full max-w-md shadow-2xl duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
         <h2 className="text-white text-2xl font-extrabold mb-2 text-center">
-          🌟 spotify blender 🌟
+          🌟 blendify 🌟
         </h2>
         <p className="text-center text-sm font-medium">blend with spotify friends anytime, anywhere</p>
 
@@ -127,9 +128,13 @@ export default function BlenderForm({ setUsers, setAppState }: BlenderFormProps)
 
         <div className="mt-5">
           <button onClick={() => router.push("/sharelink")} className="text-green-400 text-sm hover:underline">
-            Need help finding share link?
+            need help finding share link?
           </button>
         </div>
+
+        {errorMessage &&
+          <p className="w-full text-red-400 text-sm">{errorMessage}</p>
+        }
       </div >
     </div >
   );

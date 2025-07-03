@@ -77,9 +77,9 @@ export default function BlenderLoadingPage({ userNames }: BlenderLoadingPageProp
         </div>
 
         {/* Animated text */}
-        <div className="h-8 flex items-center justify-center">
+        <div className="h-8 pr-2 pl-2 flex items-center justify-center">
           <p
-            className={`text-white text-xl font-extrabold transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'
+            className={`text-white text-xl text-center font-extrabold transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'
               }`}
           >
             {loadingTexts[currentTextIndex]}
