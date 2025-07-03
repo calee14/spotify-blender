@@ -5,13 +5,11 @@ import { useState } from 'react';
 interface ClipboardButtonProps {
   value: string;
   children?: React.ReactNode;
-  className?: string;
 }
 
 export default function ClipboardButton({
   value,
   children = 'Copy Email',
-  className = ''
 }: ClipboardButtonProps) {
   const [showMessage, setShowMessage] = useState(false);
 
