@@ -303,12 +303,12 @@ export default function BlenderResultsPage({ tasteMatch,
       content: (
         <div>
           <button
-            onClick={() => router.push('/')}
+            onClick={() => window.location.reload()}
             className="text-black bg-[#1DB954] hover:bg-[#1ED760] px-8 py-3 rounded-full font-semibold transition-all duration-200 hover:scale-105 active:scale-100"
           >
             go back home
           </button>
-        </div>
+        </div >
       )
     }
   ];
