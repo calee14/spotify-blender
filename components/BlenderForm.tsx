@@ -142,6 +142,6 @@ export default function BlenderForm({ setUsers, setAppState, errorMessage }: Ble
           <p className="font-bold text-[#1db954]">contact us!</p>
         </ClipboardButton>
       </div>
-    </div>
+    </div >
   );
 }
