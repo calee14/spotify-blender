@@ -165,12 +165,12 @@ export default function BlenderResultsPage({ tasteMatch,
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium text-sm truncate max-w-52 sm:max-w-96 group-hover:text-[#1db954] transition-colors">
+                    <p className="text-white font-medium text-sm truncate max-w-48 sm:max-w-96 group-hover:text-[#1db954] transition-colors">
                       <a className='hover:underline'>
                         {song.track.name}
                       </a>
                     </p>
-                    <p className="text-gray-400 text-xs truncate max-w-52 sm:max-w-96">
+                    <p className="text-gray-400 text-xs truncate max-w-48 sm:max-w-96">
                       {song.track.artists.map((artist) => artist.name).join(',')}
                     </p>
                   </div>
