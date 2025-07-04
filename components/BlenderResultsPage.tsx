@@ -2,6 +2,7 @@ import { AppState } from '@/types/enums';
 import { PlaylistTrack } from '@/types/global';
 import { Track, User } from '@spotify/web-api-ts-sdk';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, Dispatch, SetStateAction, useMemo } from 'react';
 
 interface BlenderResultPageProps {
@@ -19,6 +20,8 @@ export default function BlenderResultsPage({ tasteMatch,
   sharedTracks,
   userMap
 }: BlenderResultPageProps) {
+
+  const router = useRouter();
 
   const [visibleTexts, setVisibleTexts] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
@@ -293,6 +296,20 @@ export default function BlenderResultsPage({ tasteMatch,
           </div>
         </div>
       )
+    },
+    {
+      id: 6,
+      title: "Want to make another blend?",
+      content: (
+        <div>
+          <button
+            onClick={() => router.push('/')}
+            className="text-black bg-[#1DB954] hover:bg-[#1ED760] px-8 py-3 rounded-full font-semibold transition-all duration-200 hover:scale-105 active:scale-100"
+          >
+            go back home
+          </button>
+        </div>
+      )
     }
   ];
 
@@ -335,7 +352,6 @@ export default function BlenderResultsPage({ tasteMatch,
           </div>
         ))}
       </div>
-
     </div>
   );
 }
