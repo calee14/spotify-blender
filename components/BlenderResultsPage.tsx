@@ -2,7 +2,6 @@ import { AppState } from '@/types/enums';
 import { PlaylistTrack } from '@/types/global';
 import { Track, User } from '@spotify/web-api-ts-sdk';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, Dispatch, SetStateAction, useMemo } from 'react';
 
 interface BlenderResultPageProps {
@@ -20,8 +19,6 @@ export default function BlenderResultsPage({ tasteMatch,
   sharedTracks,
   userMap
 }: BlenderResultPageProps) {
-
-  const router = useRouter();
 
   const [visibleTexts, setVisibleTexts] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
