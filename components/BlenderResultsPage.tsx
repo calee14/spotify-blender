@@ -70,7 +70,7 @@ export default function BlenderResultsPage({ tasteMatch,
     } else if (match >= 65) {
       return {
         title: `You share the same rhythm 🎶 (${match}%)`,
-        subtitle: "Do I hear the same melody?",
+        subtitle: "Do I hear the same melody coming on?",
       };
     } else if (match >= 52) {
       return {
