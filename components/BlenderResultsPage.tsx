@@ -22,6 +22,8 @@ export default function BlenderResultsPage({ tasteMatch,
 
   const [visibleTexts, setVisibleTexts] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const [expandedIndex, setExpandedIndex] = useState<string | null>(null);
+  const [isIframeLoaded, setIsIframeLoaded] = useState(false);
 
   // memo for search shared songs
   const filteredSharedTracks = useMemo(() => {
@@ -83,6 +85,12 @@ export default function BlenderResultsPage({ tasteMatch,
     }
   }
 
+  // use for toggling playlist item to show track player
+  const toggleExpanded = (index: string) => {
+    setIsIframeLoaded(false);
+    setExpandedIndex(expandedIndex === index.toString() ? null : index.toString());
+  }
+
   // containers to display result
   // for the fade in effect
   const matchMessage = getMatchMessage(tasteMatch);
@@ -120,25 +128,15 @@ export default function BlenderResultsPage({ tasteMatch,
       subtitle: "",
       content: (
         <div className="flex items-center space-x-4 group">
-          <div className="w-16 h-16 flex items-center justify-center">
-            <Image
-              width={60}
-              height={60}
-              src={ourSong.album.images.at(0)?.url || ""}
-              alt="🌟"
-              className="rounded-md w-[60px] h-[60px]"
-              style={{ objectFit: 'cover' }}
-            />
-          </div>
           <div className="flex-1 min-w-0">
-            <p className="text-white font-semibold max-w-52 sm:max-w-96 truncate group-hover:text-[#1db954] transition-colors">
-              <a href={ourSong.uri} className='hover:underline'>
-                {ourSong.name}
-              </a>
-            </p>
-            <p className="text-gray-400 text-xs truncate max-w-52 sm:max-w-96">
-              {ourSong.artists.map((artist) => artist.name).join(',')}
-            </p>
+            <iframe
+              style={{ borderRadius: "12px" }}
+              src={`https://open.spotify.com/embed/track/${ourSong.id.toString()}?utm_source=generator`}
+              width="100%"
+              height="152"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy">
+            </iframe>
           </div>
         </div>
       )
@@ -150,50 +148,72 @@ export default function BlenderResultsPage({ tasteMatch,
       content: (
         <div className="">
           {shuffledPlaylist.map((song, index) => (
-            <div
-              key={index + 1}
-              className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"
-            >
-              <div className="flex items-center space-x-3 flex-1">
-                <div className="w-10 h-10 rounded-md flex items-center justify-center flex-shrink-0">
-                  <Image
-                    width={40}
-                    height={40}
-                    src={song.track.album.images.at(0)?.url || ""}
-                    alt="🌟"
-                    className="rounded-md w-[40px] h-[40px]"
-                    style={{ objectFit: 'cover' }}
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium text-sm truncate max-w-52 sm:max-w-96 group-hover:text-[#1db954] transition-colors">
-                    <a href={song.track.uri} className='hover:underline'>
-                      {song.track.name}
-                    </a>
-                  </p>
-                  <p className="text-gray-400 text-xs truncate max-w-52 sm:max-w-96">
-                    {song.track.artists.map((artist) => artist.name).join(',')}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2 ml-4">
-                <span className="text-xs font-medium flex">
-                  {song.originUser.map((user, index) =>
+            <div key={index}>
+              <div
+                onClick={() => toggleExpanded(index.toString())}
+                className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"
+              >
+                <div className="flex items-center space-x-3 flex-1">
+                  <div className="w-10 h-10 rounded-md flex items-center justify-center flex-shrink-0">
                     <Image
-                      key={index}
-                      width={20}
-                      height={20}
-                      src={userMap.get(user)?.images.at(0)?.url || ''}
-                      alt='user'
-                      className="rounded-full w-[20px] h-[20px] -ml-1 first:ml-0"
-                      style={{ objectFit: 'cover', zIndex: song.originUser.length - index }}
-                    />)
-                  }
-                </span>
+                      width={40}
+                      height={40}
+                      src={song.track.album.images.at(0)?.url || ""}
+                      alt="🌟"
+                      className="rounded-md w-[40px] h-[40px]"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-medium text-sm truncate max-w-48 sm:max-w-96 group-hover:text-[#1db954] transition-colors">
+                      <a className='hover:underline'>
+                        {song.track.name}
+                      </a>
+                    </p>
+                    <p className="text-gray-400 text-xs truncate max-w-48 sm:max-w-96">
+                      {song.track.artists.map((artist) => artist.name).join(',')}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2 ml-4">
+                  <span className="text-xs font-medium flex">
+                    {song.originUser.map((user, index) =>
+                      <Image
+                        key={index}
+                        width={20}
+                        height={20}
+                        src={userMap.get(user)?.images.at(0)?.url || ''}
+                        alt='user'
+                        className="rounded-full w-[20px] h-[20px] -ml-1 first:ml-0"
+                        style={{ objectFit: 'cover', zIndex: song.originUser.length - index }}
+                      />)
+                    }
+                  </span>
+                </div>
               </div>
+              {expandedIndex === index.toString() && (
+                <div>
+                  <iframe
+                    style={{ borderRadius: "12px" }}
+                    src={`https://open.spotify.com/embed/${song.track.type === "episode" ? "episode" : "track"}/${song.track.id}?utm_source=generator`}
+                    width="100%"
+                    height="152"
+                    allowFullScreen={true}
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                    className={`mt-2 mb-2 transition-all duration-[700ms] ease-out transform ${isIframeLoaded
+                      ? 'opacity-100'
+                      : 'opacity-0'
+                      }`}
+                    onLoad={() => setIsIframeLoaded(true)}
+                  >
+                  </iframe>
+                </div>
+              )}
             </div>
-          ))}
-        </div>
+          ))
+          }
+        </div >
       )
     },
     {
@@ -220,37 +240,72 @@ export default function BlenderResultsPage({ tasteMatch,
 
           {/* Song List */}
           <div className="max-h-96 overflow-scroll">
-            {filteredSharedTracks.map((song) => (
-              <div
-                key={`search - ${song.id} `}
-                className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"
-              >
-                <div className="flex items-center space-x-3 flex-1">
-                  <div className="w-10 rounded-md flex items-center justify-center flex-shrink-0">
-                    <Image
-                      width={40}
-                      height={40}
-                      src={song.album.images.at(0)?.url || ""}
-                      alt="🌟"
-                      className="rounded-md w-[40px] h-[40px]"
-                      style={{ objectFit: 'cover' }}
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium text-sm truncate max-w-52 sm:max-w-96 group-hover:text-[#1db954] transition-colors">
-                      <a href={song.uri} className='hover:underline'>
-                        {song.name}
-                      </a>
-                    </p>
-                    <p className="text-gray-400 text-xs truncate max-w-52 sm:max-w-96">
-                      {song.artists.map((artist) => artist.name).join(',')}
-                    </p>
+            {filteredSharedTracks.map((song, index) => (
+              <div key={`y${index}`}>
+                <div
+                  onClick={() => toggleExpanded(`y${index}`)}
+                  className="flex items-center justify-between p-3 bg-gray-900/50 hover:bg-gray-800/60 rounded-lg transition-colors duration-200 cursor-pointer group"
+                >
+                  <div className="flex items-center space-x-3 flex-1">
+                    <div className="w-10 rounded-md flex items-center justify-center flex-shrink-0">
+                      <Image
+                        width={40}
+                        height={40}
+                        src={song.album.images.at(0)?.url || ""}
+                        alt="🌟"
+                        className="rounded-md w-[40px] h-[40px]"
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-medium text-sm truncate max-w-52 sm:max-w-96 group-hover:text-[#1db954] transition-colors">
+                        <a className='hover:underline'>
+                          {song.name}
+                        </a>
+                      </p>
+                      <p className="text-gray-400 text-xs truncate max-w-52 sm:max-w-96">
+                        {song.artists.map((artist) => artist.name).join(',')}
+                      </p>
+                    </div>
                   </div>
                 </div>
+                {expandedIndex === `y${index}` && (
+                  <div>
+                    <iframe
+                      style={{ borderRadius: "12px" }}
+                      src={`https://open.spotify.com/embed/${song.type === "episode" ? "episode" : "track"}/${song.id}?utm_source=generator`}
+                      width="100%"
+                      height="152"
+                      allowFullScreen={true}
+                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                      loading="lazy"
+                      className={`mt-2 mb-2 transition-all duration-[700ms] ease-out transform ${isIframeLoaded
+                        ? 'opacity-100'
+                        : 'opacity-0'
+                        }`}
+                      onLoad={() => setIsIframeLoaded(true)}
+                    >
+                    </iframe>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
+      )
+    },
+    {
+      id: 6,
+      title: "Want to make another blend?",
+      content: (
+        <div>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-black bg-[#1DB954] hover:bg-[#1ED760] px-8 py-3 rounded-full font-semibold transition-all duration-200 hover:scale-105 active:scale-100"
+          >
+            go back home
+          </button>
+        </div >
       )
     }
   ];
@@ -294,7 +349,6 @@ export default function BlenderResultsPage({ tasteMatch,
           </div>
         ))}
       </div>
-
     </div>
   );
 }
