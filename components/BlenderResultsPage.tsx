@@ -52,36 +52,164 @@ export default function BlenderResultsPage({ tasteMatch,
   }, [playlist])
 
   // get matching msgs
-  function getMatchMessage(tasteMatch: string) {
-    const justNumber = tasteMatch.replace(/[^\d.]/g, '');
-    const match = Number(justNumber);
-    if (match >= 91) {
-      return {
+function getMatchMessage(tasteMatch: string) {
+  const justNumber = tasteMatch.replace(/[^\d.]/g, '');
+  const match = Number(justNumber);
+
+  if (match >= 91) {
+    const messages = [
+      {
         title: `It's true love at first listen 🫀🎧 (${match}%)`,
-        subtitle: "It's fate. You two are in sync.",
-      };
-    } else if (match >= 78) {
-      return {
-        title: `You're musical soulmates 🎵💞 (${match}%)`,
+        subtitle: "It's fate. You two are in sync. 🤝",
+      },
+      {
+        title: `I'm not like other... wait we're not like other... wait we ARE like each other 👯‍♀️⚔️🌎'`,
+        subtitle: "Turns out, in a world of unique snowflakes❄️, you both somehow ended up with the same misunderstood brand of 'different.' Congratulations!",
+      },
+      {
+        title: `Musical soulmates activated! ✨ (${match}%)`,
+        subtitle: "This isn't just a match, it's destiny. You two could probably finish each other's songs.",
+      },
+      {
+        title: `This isn't just a match, it was written in the stars. 💞✍️🌠`,
+        subtitle: "Seriously, did you write this connection into existence? Because it's too good to be true.",
+      },
+      {
+        title: `The crowds in stands went wild 📣🍻`,
+        subtitle: "'Cause for a moment, we got to rule the world 🌎👑",
+      },
+      {
+        title: `Warning: Extreme compatibility detected! 🚨 (${match}%)`,
+        subtitle: "You're so in sync, you might start humming the same tune at the exact same time. Proceed with caution.⚠️",
+      },
+      {
+        title: `A pair of aces 🂡🂱`,
+        subtitle: "Never fold a winning hand 🤑💸💰"
+      },
+      {
+        title: `Together at last 🔐💞`,
+        subtitle: "The night we danced because we knew our lives would never be the same 🌌"
+      },
+    ];
+    return messages[Math.floor(Math.random() * messages.length)];
+  } else if (match >= 78) {
+    const messages = [
+      {
+        title: `Wedding bells are chiming 💒🔔🎵💞 (${match}%)`,
         subtitle: "Chances are you probably already share pre-marital playlists. Might as well tie the knot!",
-      };
-    } else if (match >= 65) {
-      return {
-        title: `You share the same rhythm 🎶 (${match}%)`,
-        subtitle: "Do I hear the same melody coming on?",
-      };
-    } else if (match >= 52) {
-      return {
+      },
+      {
+        title: `Harmonics achieved! 🎶 (${match}%)`,
+        subtitle: "Your tastes align like perfect chords. Time to compose that duet!",
+      },
+      {
+        title: `Finally, someone else who "gets it." 🧠🙂‍↕️⨊`,
+        subtitle: "You've found your rare breed. No more explaining your unique quirks because they just *know*. It's a beautiful thing.",
+      },
+      {
+        title: `You two are partners in murder...ous musical connection 👀🫆🔍`,
+        subtitle: "Consider yourselves co-conspirators in such excellent taste it's almost criminal. Prepare for effortless conversations and shared, slightly mischievous, laughs. 😉",
+      },
+      {
+        title: `Practically psychic connection! 🔮🪬`,
+        subtitle: "It’s like we can read each other's minds... or at least anticipate each other's next brilliant thought.",
+      },
+      {
+        title: `Nailed it. You're musical kindred souls 💘`,
+        subtitle: "Seriously, you two are a fantastic duo. The kind of match Taylor Swift write love songs about. 📝",
+      },
+      {
+        title: `Roadtrip!! 🚗🎤 (${match}%)`,
+        subtitle: "This kind of musical connection deserves a stadium tour. Or at least a really good car singalong. Best part is you both know all the lyrics",
+      },
+    ];
+    return messages[Math.floor(Math.random() * messages.length)];
+  } else if (match >= 65) {
+    const messages = [
+      {
+        title: `You share a groovy rhythm 🕺💃 (${match}%)`,
+        subtitle: "Do I hear the same melody coming on? This could be the start of a beautiful symphony.",
+      },
+      {
+        title: `Melody makers in the making! 🎼 (${match}%)`,
+        subtitle: "There's definitely a shared beat here. Who knows what hits you'll discover together?",
+      },
+      {
+        title: `More than just good company. ⚡️🎇`,
+        subtitle: "There's a definite spark here. Think of it as a promising beginning to a very cool story.",
+      },
+      {
+        title: `Not identical, but perfectly complementary. 🧩`,
+        subtitle: "Think of yourselves as two puzzle pieces that just happen to fit perfectly.",
+      },
+      {
+        title: `Roll out the trophies for the winners. 🏆🏆`,
+        subtitle: "This match is a definite win. Enough common ground to be comfortable, enough difference to be exciting for fun discoveries and shared adventures. 🥾🌄",
+      },
+      {
+        title: `Close enough to share earbuds! 🎧 (${match}%)`,
+        subtitle: "There might be some awkward (or heated) skips but at least you're listening together 🚗🎶",
+      },
+    ];
+    return messages[Math.floor(Math.random() * messages.length)];
+  } else if (match >= 52) {
+    const messages = [
+      {
         title: `Some overlap, some mystery... 🔍 (${match}%)`,
         subtitle: "This could grow into something.",
-      };
-    } else {
-      return {
+      },
+      {
+        title: `Tune in, turn on, and needle drop! 🤔 (${match}%)`,
+        subtitle: "Enough common ground to build on, but plenty of new territory to explore. Start the record player! What's next on the playlist?",
+      },
+      {
+        title: `Still figuring it out, and that's okay!`,
+        subtitle: "Gray area is better than no area. Think of this as a blank canvas.",
+      },
+      {
+        title: `I'm in Heaven! 😇 (${match}%)`,
+        subtitle: "You know what they say 🥰 Heaven is a place on Earth -or- you killed each other from musical differences",
+      },
+    ];
+    return messages[Math.floor(Math.random() * messages.length)];
+  } else {
+    const messages = [
+      {
         title: `Maybe not your other half... but the other half of music? 🎲 (${match}%)`,
-        subtitle: "Opposites attract... sometimes.",
-      };
-    }
+        subtitle: "Opposites attract... sometimes",
+      },
+      {
+        title: `Diversity is all the rave! 🤩🌝(${match}%)`,
+        subtitle: "Or at least they make for interesting listening parties.",
+      },
+      {
+        title: `The "it's complicated" of playlists 🤪 (${match}%)`,
+        subtitle: "You probably won't be sharing headphones, but at least there will always be something new to listen to!",
+      },
+      {
+        title: `Opposites attract... or at least coexist peacefully. ☮️👩‍⚖️👨‍⚖️`,
+        subtitle: "Hey, at least you'll never run out of things to talk about (or gently debate! 🤺). Embrace the beautiful chaos.",
+      },
+      {
+        title: `Houston, we have... differences. 🪐🌎🚀`,
+        subtitle: "Your music tastes might be on different planets 🛸, but that just makes the journey to understanding more adventurous! 👽",
+      },
+      {
+        title: `It's not you, it's just... everything else.`,
+        subtitle: "Don't take it personally! Sometimes, the universe just likes to throw a curveball. ⚾️",
+      },
+      {
+        title: `The chances of you two together? One in a million 🥺`,
+        subtitle: "So you're telling me I have a chance. 🎰"
+      },
+      {
+        title: `Time to test your dedication`,
+        subtitle: "Patience is key. You know what they say, the curious cat 🐈‍⬛ was first to kill the worm 🪱"
+      }
+    ];
+    return messages[Math.floor(Math.random() * messages.length)];
   }
+}
 
   // containers to display result
   // for the fade in effect
