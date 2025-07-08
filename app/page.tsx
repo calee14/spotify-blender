@@ -13,7 +13,7 @@ import getCcassScore from "@/util/getCcassScore";
 import getCcass from "@/util/getCcass";
 import { PlaylistTrack } from "@/types/global";
 
-const NUM_PLAYLISTS_FETCHED = 2;
+const NUM_PLAYLISTS_FETCHED = 13;
 
 export default function Home() {
 
