@@ -13,7 +13,7 @@ import getCcassScore from "@/util/getCcassScore";
 import getCcass from "@/util/getCcass";
 import { PlaylistTrack } from "@/types/global";
 
-const NUM_PLAYLISTS_FETCHED = 13;
+const NUM_PLAYLISTS_FETCHED = 2;
 
 export default function Home() {
 
@@ -93,7 +93,7 @@ export default function Home() {
     }
   }
   return (
-    <div className="min-h-screen bg-black items-center justify-center p-4">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
       {renderAppStates()}
     </div>
   );

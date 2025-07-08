@@ -72,7 +72,7 @@ export default function BlenderForm({ setUsers, setAppState, errorMessage }: Ble
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="sm:min-w-[26rem] items-center justify-center">
       <div className={`bg-[#131313] rounded-lg p-8 w-full max-w-md shadow-2xl duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
         <h2 className="text-white text-2xl font-extrabold mb-2 text-center">
           🌟 blendify 🌟
